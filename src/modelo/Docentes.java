@@ -4,8 +4,6 @@
  */
 package modelo;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,7 +20,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -40,36 +37,42 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Docentes.findByApellidos", query = "SELECT d FROM Docentes d WHERE d.apellidos = :apellidos"),
     @NamedQuery(name = "Docentes.findByTelefono", query = "SELECT d FROM Docentes d WHERE d.telefono = :telefono"),
     @NamedQuery(name = "Docentes.findByCorreoInstitucional", query = "SELECT d FROM Docentes d WHERE d.correoInstitucional = :correoInstitucional"),
-    @NamedQuery(name = "Docentes.findByCorreoPersonal", query = "SELECT d FROM Docentes d WHERE d.correoPersonal = :correoPersonal"),
-    @NamedQuery(name = "Docentes.findByRol", query = "SELECT d FROM Docentes d WHERE d.rol = :rol")})
+    @NamedQuery(name = "Docentes.findByCorreoPersonal", query = "SELECT d FROM Docentes d WHERE d.correoPersonal = :correoPersonal")})
 public class Docentes implements Serializable {
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
     @Column(name = "IDENTIFICACION")
     private BigDecimal identificacion;
+    @Basic(optional = false)
     @Column(name = "NOMBRES")
     private String nombres;
+    @Basic(optional = false)
     @Column(name = "APELLIDOS")
     private String apellidos;
+    @Basic(optional = false)
     @Column(name = "TELEFONO")
     private BigInteger telefono;
     @Column(name = "CORREO_INSTITUCIONAL")
     private String correoInstitucional;
+    @Basic(optional = false)
     @Column(name = "CORREO_PERSONAL")
     private BigInteger correoPersonal;
-    @Column(name = "ROL")
-    private String rol;
     @JoinTable(name = "DOCENTES_SUSTENTACIONES", joinColumns = {
         @JoinColumn(name = "DOCENTES_IDENTIFICACION", referencedColumnName = "IDENTIFICACION")}, inverseJoinColumns = {
         @JoinColumn(name = "SUSTENTACIONES_ID", referencedColumnName = "ID")})
     @ManyToMany
     private Collection<Sustentaciones> sustentacionesCollection;
+    @JoinTable(name = "DOCENTES_ROLES", joinColumns = {
+        @JoinColumn(name = "DOCENTES_IDENTIFICACION", referencedColumnName = "IDENTIFICACION")}, inverseJoinColumns = {
+        @JoinColumn(name = "ROLES_ROLES_ID", referencedColumnName = "ROLES_ID")})
+    @ManyToMany
+    private Collection<Roles> rolesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "docentesIdentificacion")
     private Collection<Usuarios> usuariosCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "docentesIdentificacion")
+    private Collection<Horarios> horariosCollection;
     @OneToMany(mappedBy = "docentesIdentificacion")
     private Collection<Proyectos> proyectosCollection;
 
@@ -80,14 +83,20 @@ public class Docentes implements Serializable {
         this.identificacion = identificacion;
     }
 
+    public Docentes(BigDecimal identificacion, String nombres, String apellidos, BigInteger telefono, BigInteger correoPersonal) {
+        this.identificacion = identificacion;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.telefono = telefono;
+        this.correoPersonal = correoPersonal;
+    }
+
     public BigDecimal getIdentificacion() {
         return identificacion;
     }
 
     public void setIdentificacion(BigDecimal identificacion) {
-        BigDecimal oldIdentificacion = this.identificacion;
         this.identificacion = identificacion;
-        changeSupport.firePropertyChange("identificacion", oldIdentificacion, identificacion);
     }
 
     public String getNombres() {
@@ -95,9 +104,7 @@ public class Docentes implements Serializable {
     }
 
     public void setNombres(String nombres) {
-        String oldNombres = this.nombres;
         this.nombres = nombres;
-        changeSupport.firePropertyChange("nombres", oldNombres, nombres);
     }
 
     public String getApellidos() {
@@ -105,9 +112,7 @@ public class Docentes implements Serializable {
     }
 
     public void setApellidos(String apellidos) {
-        String oldApellidos = this.apellidos;
         this.apellidos = apellidos;
-        changeSupport.firePropertyChange("apellidos", oldApellidos, apellidos);
     }
 
     public BigInteger getTelefono() {
@@ -115,9 +120,7 @@ public class Docentes implements Serializable {
     }
 
     public void setTelefono(BigInteger telefono) {
-        BigInteger oldTelefono = this.telefono;
         this.telefono = telefono;
-        changeSupport.firePropertyChange("telefono", oldTelefono, telefono);
     }
 
     public String getCorreoInstitucional() {
@@ -125,9 +128,7 @@ public class Docentes implements Serializable {
     }
 
     public void setCorreoInstitucional(String correoInstitucional) {
-        String oldCorreoInstitucional = this.correoInstitucional;
         this.correoInstitucional = correoInstitucional;
-        changeSupport.firePropertyChange("correoInstitucional", oldCorreoInstitucional, correoInstitucional);
     }
 
     public BigInteger getCorreoPersonal() {
@@ -135,19 +136,7 @@ public class Docentes implements Serializable {
     }
 
     public void setCorreoPersonal(BigInteger correoPersonal) {
-        BigInteger oldCorreoPersonal = this.correoPersonal;
         this.correoPersonal = correoPersonal;
-        changeSupport.firePropertyChange("correoPersonal", oldCorreoPersonal, correoPersonal);
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        String oldRol = this.rol;
-        this.rol = rol;
-        changeSupport.firePropertyChange("rol", oldRol, rol);
     }
 
     @XmlTransient
@@ -160,12 +149,30 @@ public class Docentes implements Serializable {
     }
 
     @XmlTransient
+    public Collection<Roles> getRolesCollection() {
+        return rolesCollection;
+    }
+
+    public void setRolesCollection(Collection<Roles> rolesCollection) {
+        this.rolesCollection = rolesCollection;
+    }
+
+    @XmlTransient
     public Collection<Usuarios> getUsuariosCollection() {
         return usuariosCollection;
     }
 
     public void setUsuariosCollection(Collection<Usuarios> usuariosCollection) {
         this.usuariosCollection = usuariosCollection;
+    }
+
+    @XmlTransient
+    public Collection<Horarios> getHorariosCollection() {
+        return horariosCollection;
+    }
+
+    public void setHorariosCollection(Collection<Horarios> horariosCollection) {
+        this.horariosCollection = horariosCollection;
     }
 
     @XmlTransient
@@ -200,14 +207,6 @@ public class Docentes implements Serializable {
     @Override
     public String toString() {
         return "modelo.Docentes[ identificacion=" + identificacion + " ]";
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

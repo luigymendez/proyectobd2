@@ -45,21 +45,16 @@ public class ArchivosAdjuntos implements Serializable {
     private String tipo;
     @Column(name = "URL")
     private String url;
-    @JoinTable(name = "FICHA_ARCHIVOS", joinColumns = {
+    @JoinTable(name = "DOCUMENTOS_ARCHIVOS", joinColumns = {
         @JoinColumn(name = "ARCHIVOS_ADJUNTOS_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "FICHAS_ID", referencedColumnName = "ID")})
+        @JoinColumn(name = "DOCUMENTOS_ID", referencedColumnName = "ID")})
     @ManyToMany
-    private Collection<Fichas> fichasCollection;
+    private Collection<Documentos> documentosCollection;
     @JoinTable(name = "AVANCES_ARCHIVOS", joinColumns = {
         @JoinColumn(name = "ARCHIVOS_ADJUNTOS_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "AVANCES_ID", referencedColumnName = "ID")})
     @ManyToMany
     private Collection<Avances> avancesCollection;
-    @JoinTable(name = "ENTREGABLES_ARCHIVOS", joinColumns = {
-        @JoinColumn(name = "ARCHIVOS_ADJUNTOS_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "ENTREGABLES_ID", referencedColumnName = "ID")})
-    @ManyToMany
-    private Collection<Entregables> entregablesCollection;
     @JoinTable(name = "IDEAS_ARCHIVOS", joinColumns = {
         @JoinColumn(name = "ARCHIVOS_ADJUNTOS_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "IDEAS_ID", referencedColumnName = "ID")})
@@ -110,12 +105,12 @@ public class ArchivosAdjuntos implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Fichas> getFichasCollection() {
-        return fichasCollection;
+    public Collection<Documentos> getDocumentosCollection() {
+        return documentosCollection;
     }
 
-    public void setFichasCollection(Collection<Fichas> fichasCollection) {
-        this.fichasCollection = fichasCollection;
+    public void setDocumentosCollection(Collection<Documentos> documentosCollection) {
+        this.documentosCollection = documentosCollection;
     }
 
     @XmlTransient
@@ -125,15 +120,6 @@ public class ArchivosAdjuntos implements Serializable {
 
     public void setAvancesCollection(Collection<Avances> avancesCollection) {
         this.avancesCollection = avancesCollection;
-    }
-
-    @XmlTransient
-    public Collection<Entregables> getEntregablesCollection() {
-        return entregablesCollection;
-    }
-
-    public void setEntregablesCollection(Collection<Entregables> entregablesCollection) {
-        this.entregablesCollection = entregablesCollection;
     }
 
     @XmlTransient

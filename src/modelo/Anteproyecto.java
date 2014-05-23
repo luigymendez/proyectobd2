@@ -6,6 +6,7 @@ package modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -32,9 +33,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Anteproyecto.findAll", query = "SELECT a FROM Anteproyecto a"),
     @NamedQuery(name = "Anteproyecto.findById", query = "SELECT a FROM Anteproyecto a WHERE a.id = :id"),
     @NamedQuery(name = "Anteproyecto.findByTitulo", query = "SELECT a FROM Anteproyecto a WHERE a.titulo = :titulo"),
-    @NamedQuery(name = "Anteproyecto.findByGrupo", query = "SELECT a FROM Anteproyecto a WHERE a.grupo = :grupo"),
     @NamedQuery(name = "Anteproyecto.findByPeriodo", query = "SELECT a FROM Anteproyecto a WHERE a.periodo = :periodo"),
-    @NamedQuery(name = "Anteproyecto.findByNotaDefinitiva", query = "SELECT a FROM Anteproyecto a WHERE a.notaDefinitiva = :notaDefinitiva")})
+    @NamedQuery(name = "Anteproyecto.findByGrupo", query = "SELECT a FROM Anteproyecto a WHERE a.grupo = :grupo"),
+    @NamedQuery(name = "Anteproyecto.findByNotaDefinitiva", query = "SELECT a FROM Anteproyecto a WHERE a.notaDefinitiva = :notaDefinitiva"),
+    @NamedQuery(name = "Anteproyecto.findByEstadosId", query = "SELECT a FROM Anteproyecto a WHERE a.estadosId = :estadosId")})
 public class Anteproyecto implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -46,19 +48,18 @@ public class Anteproyecto implements Serializable {
     @Column(name = "TITULO")
     private String titulo;
     @Basic(optional = false)
-    @Column(name = "GRUPO")
-    private String grupo;
-    @Basic(optional = false)
     @Column(name = "PERIODO")
     private String periodo;
+    @Basic(optional = false)
+    @Column(name = "GRUPO")
+    private String grupo;
     @Column(name = "NOTA_DEFINITIVA")
     private BigDecimal notaDefinitiva;
+    @Column(name = "ESTADOS_ID")
+    private BigInteger estadosId;
     @JoinColumn(name = "PROPUESTAS_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Propuestas propuestasId;
-    @JoinColumn(name = "ESTADOS_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private Estados estadosId;
     @OneToMany(mappedBy = "anteproyectoId")
     private Collection<Avances> avancesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "anteproyectoId")
@@ -71,11 +72,11 @@ public class Anteproyecto implements Serializable {
         this.id = id;
     }
 
-    public Anteproyecto(BigDecimal id, String titulo, String grupo, String periodo) {
+    public Anteproyecto(BigDecimal id, String titulo, String periodo, String grupo) {
         this.id = id;
         this.titulo = titulo;
-        this.grupo = grupo;
         this.periodo = periodo;
+        this.grupo = grupo;
     }
 
     public BigDecimal getId() {
@@ -94,20 +95,20 @@ public class Anteproyecto implements Serializable {
         this.titulo = titulo;
     }
 
-    public String getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
-    }
-
     public String getPeriodo() {
         return periodo;
     }
 
     public void setPeriodo(String periodo) {
         this.periodo = periodo;
+    }
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
     }
 
     public BigDecimal getNotaDefinitiva() {
@@ -118,20 +119,20 @@ public class Anteproyecto implements Serializable {
         this.notaDefinitiva = notaDefinitiva;
     }
 
+    public BigInteger getEstadosId() {
+        return estadosId;
+    }
+
+    public void setEstadosId(BigInteger estadosId) {
+        this.estadosId = estadosId;
+    }
+
     public Propuestas getPropuestasId() {
         return propuestasId;
     }
 
     public void setPropuestasId(Propuestas propuestasId) {
         this.propuestasId = propuestasId;
-    }
-
-    public Estados getEstadosId() {
-        return estadosId;
-    }
-
-    public void setEstadosId(Estados estadosId) {
-        this.estadosId = estadosId;
     }
 
     @XmlTransient

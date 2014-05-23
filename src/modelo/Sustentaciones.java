@@ -7,6 +7,7 @@ package modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -34,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Sustentaciones.findByHoraInicio", query = "SELECT s FROM Sustentaciones s WHERE s.horaInicio = :horaInicio"),
     @NamedQuery(name = "Sustentaciones.findByHoraFinal", query = "SELECT s FROM Sustentaciones s WHERE s.horaFinal = :horaFinal"),
     @NamedQuery(name = "Sustentaciones.findByObservacionDocumento", query = "SELECT s FROM Sustentaciones s WHERE s.observacionDocumento = :observacionDocumento"),
+    @NamedQuery(name = "Sustentaciones.findByCalificacion", query = "SELECT s FROM Sustentaciones s WHERE s.calificacion = :calificacion"),
+    @NamedQuery(name = "Sustentaciones.findByLugar", query = "SELECT s FROM Sustentaciones s WHERE s.lugar = :lugar"),
     @NamedQuery(name = "Sustentaciones.findByObservacionSustentacionOral", query = "SELECT s FROM Sustentaciones s WHERE s.observacionSustentacionOral = :observacionSustentacionOral")})
 public class Sustentaciones implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -44,27 +49,34 @@ public class Sustentaciones implements Serializable {
     private BigDecimal id;
     @Basic(optional = false)
     @Column(name = "FECHA_SUSTENTACION")
-    private String fechaSustentacion;
+    @Temporal(TemporalType.DATE)
+    private Date fechaSustentacion;
     @Basic(optional = false)
     @Column(name = "HORA_INICIO")
-    private String horaInicio;
+    @Temporal(TemporalType.DATE)
+    private Date horaInicio;
     @Basic(optional = false)
     @Column(name = "HORA_FINAL")
-    private String horaFinal;
-    @Basic(optional = false)
+    @Temporal(TemporalType.DATE)
+    private Date horaFinal;
     @Column(name = "OBSERVACION_DOCUMENTO")
     private String observacionDocumento;
-    @Basic(optional = false)
+    @Column(name = "CALIFICACION")
+    private BigDecimal calificacion;
+    @Column(name = "LUGAR")
+    private String lugar;
     @Column(name = "OBSERVACION_SUSTENTACION_ORAL")
     private String observacionSustentacionOral;
     @ManyToMany(mappedBy = "sustentacionesCollection")
     private Collection<Docentes> docentesCollection;
-    @JoinColumn(name = "RESERVAS_NUMERO_RESERVA", referencedColumnName = "NUMERO_RESERVA")
-    @ManyToOne(optional = false)
-    private Reservas reservasNumeroReserva;
+    @ManyToMany(mappedBy = "sustentacionesCollection")
+    private Collection<Recursos> recursosCollection;
     @JoinColumn(name = "ESTADOS_ID", referencedColumnName = "ID")
     @ManyToOne
     private Estados estadosId;
+    @JoinColumn(name = "ESPACIOS_FISICOS_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private EspaciosFisicos espaciosFisicosId;
     @JoinColumn(name = "ARCHIVOS_ADJUNTOS_ID", referencedColumnName = "ID")
     @ManyToOne
     private ArchivosAdjuntos archivosAdjuntosId;
@@ -76,13 +88,11 @@ public class Sustentaciones implements Serializable {
         this.id = id;
     }
 
-    public Sustentaciones(BigDecimal id, String fechaSustentacion, String horaInicio, String horaFinal, String observacionDocumento, String observacionSustentacionOral) {
+    public Sustentaciones(BigDecimal id, Date fechaSustentacion, Date horaInicio, Date horaFinal) {
         this.id = id;
         this.fechaSustentacion = fechaSustentacion;
         this.horaInicio = horaInicio;
         this.horaFinal = horaFinal;
-        this.observacionDocumento = observacionDocumento;
-        this.observacionSustentacionOral = observacionSustentacionOral;
     }
 
     public BigDecimal getId() {
@@ -93,27 +103,27 @@ public class Sustentaciones implements Serializable {
         this.id = id;
     }
 
-    public String getFechaSustentacion() {
+    public Date getFechaSustentacion() {
         return fechaSustentacion;
     }
 
-    public void setFechaSustentacion(String fechaSustentacion) {
+    public void setFechaSustentacion(Date fechaSustentacion) {
         this.fechaSustentacion = fechaSustentacion;
     }
 
-    public String getHoraInicio() {
+    public Date getHoraInicio() {
         return horaInicio;
     }
 
-    public void setHoraInicio(String horaInicio) {
+    public void setHoraInicio(Date horaInicio) {
         this.horaInicio = horaInicio;
     }
 
-    public String getHoraFinal() {
+    public Date getHoraFinal() {
         return horaFinal;
     }
 
-    public void setHoraFinal(String horaFinal) {
+    public void setHoraFinal(Date horaFinal) {
         this.horaFinal = horaFinal;
     }
 
@@ -123,6 +133,22 @@ public class Sustentaciones implements Serializable {
 
     public void setObservacionDocumento(String observacionDocumento) {
         this.observacionDocumento = observacionDocumento;
+    }
+
+    public BigDecimal getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(BigDecimal calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 
     public String getObservacionSustentacionOral() {
@@ -142,12 +168,13 @@ public class Sustentaciones implements Serializable {
         this.docentesCollection = docentesCollection;
     }
 
-    public Reservas getReservasNumeroReserva() {
-        return reservasNumeroReserva;
+    @XmlTransient
+    public Collection<Recursos> getRecursosCollection() {
+        return recursosCollection;
     }
 
-    public void setReservasNumeroReserva(Reservas reservasNumeroReserva) {
-        this.reservasNumeroReserva = reservasNumeroReserva;
+    public void setRecursosCollection(Collection<Recursos> recursosCollection) {
+        this.recursosCollection = recursosCollection;
     }
 
     public Estados getEstadosId() {
@@ -156,6 +183,14 @@ public class Sustentaciones implements Serializable {
 
     public void setEstadosId(Estados estadosId) {
         this.estadosId = estadosId;
+    }
+
+    public EspaciosFisicos getEspaciosFisicosId() {
+        return espaciosFisicosId;
+    }
+
+    public void setEspaciosFisicosId(EspaciosFisicos espaciosFisicosId) {
+        this.espaciosFisicosId = espaciosFisicosId;
     }
 
     public ArchivosAdjuntos getArchivosAdjuntosId() {

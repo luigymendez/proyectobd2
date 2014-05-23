@@ -4,8 +4,6 @@
  */
 package modelo;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -18,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -35,8 +32,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Usuarios.findByPassword", query = "SELECT u FROM Usuarios u WHERE u.password = :password"),
     @NamedQuery(name = "Usuarios.findByActivo", query = "SELECT u FROM Usuarios u WHERE u.activo = :activo")})
 public class Usuarios implements Serializable {
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -65,9 +60,7 @@ public class Usuarios implements Serializable {
     }
 
     public void setId(BigDecimal id) {
-        BigDecimal oldId = this.id;
         this.id = id;
-        changeSupport.firePropertyChange("id", oldId, id);
     }
 
     public BigInteger getUsuario() {
@@ -75,9 +68,7 @@ public class Usuarios implements Serializable {
     }
 
     public void setUsuario(BigInteger usuario) {
-        BigInteger oldUsuario = this.usuario;
         this.usuario = usuario;
-        changeSupport.firePropertyChange("usuario", oldUsuario, usuario);
     }
 
     public BigInteger getPassword() {
@@ -85,9 +76,7 @@ public class Usuarios implements Serializable {
     }
 
     public void setPassword(BigInteger password) {
-        BigInteger oldPassword = this.password;
         this.password = password;
-        changeSupport.firePropertyChange("password", oldPassword, password);
     }
 
     public Character getActivo() {
@@ -95,9 +84,7 @@ public class Usuarios implements Serializable {
     }
 
     public void setActivo(Character activo) {
-        Character oldActivo = this.activo;
         this.activo = activo;
-        changeSupport.firePropertyChange("activo", oldActivo, activo);
     }
 
     public Docentes getDocentesIdentificacion() {
@@ -105,9 +92,7 @@ public class Usuarios implements Serializable {
     }
 
     public void setDocentesIdentificacion(Docentes docentesIdentificacion) {
-        Docentes oldDocentesIdentificacion = this.docentesIdentificacion;
         this.docentesIdentificacion = docentesIdentificacion;
-        changeSupport.firePropertyChange("docentesIdentificacion", oldDocentesIdentificacion, docentesIdentificacion);
     }
 
     @Override
@@ -133,14 +118,6 @@ public class Usuarios implements Serializable {
     @Override
     public String toString() {
         return "modelo.Usuarios[ id=" + id + " ]";
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

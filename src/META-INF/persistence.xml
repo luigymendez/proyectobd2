@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-  <persistence-unit name="ProyectoBDIISwingPU" transaction-type="RESOURCE_LOCAL">
+  <persistence-unit name="SwingBDIIPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>modelo.Sustentaciones</class>
-    <class>modelo.Entregables</class>
-    <class>modelo.Integrantes</class>
-    <class>modelo.Estados</class>
-    <class>modelo.Observaciones</class>
-    <class>modelo.GrupoIntegrantes</class>
-    <class>modelo.Anteproyecto</class>
-    <class>modelo.Docentes</class>
-    <class>modelo.Proyectos</class>
-    <class>modelo.ArchivosAdjuntos</class>
-    <class>modelo.Reservas</class>
-    <class>modelo.Propuestas</class>
-    <class>modelo.Auditorios</class>
-    <class>modelo.Avances</class>
     <class>modelo.Asesorias</class>
-    <class>modelo.Fichas</class>
-    <class>modelo.Ideas</class>
-    <class>modelo.Usuarios</class>
-    <class>modelo.Entregas</class>
-    <class>modelo.RevisionesAvance</class>
     <class>modelo.Horarios</class>
-    <class>modelo.JuradosSustentaciones</class>
+    <class>modelo.Sedes</class>
+    <class>modelo.Avances</class>
+    <class>modelo.Docentes</class>
+    <class>modelo.EspaciosFisicos</class>
+    <class>modelo.Documentos</class>
+    <class>modelo.Empresas</class>
+    <class>modelo.Roles</class>
+    <class>modelo.Entregas</class>
+    <class>modelo.Proyectos</class>
+    <class>modelo.Sustentaciones</class>
+    <class>modelo.Propuestas</class>
+    <class>modelo.Usuarios</class>
+    <class>modelo.Estados</class>
+    <class>modelo.Recursos</class>
+    <class>modelo.ArchivosAdjuntos</class>
+    <class>modelo.Ideas</class>
+    <class>modelo.Observaciones</class>
+    <class>modelo.Anteproyecto</class>
+    <class>modelo.Integrantes</class>
+    <class>modelo.RevisionesAvance</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
-      <property name="javax.persistence.jdbc.password" value="proyectobd2"/>
+      <property name="javax.persistence.jdbc.password" value="christian"/>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
-      <property name="javax.persistence.jdbc.user" value="proyectobd2"/>
+      <property name="javax.persistence.jdbc.user" value="christian"/>
       <property name="eclipselink.ddl-generation" value="create-tables"/>
     </properties>
   </persistence-unit>

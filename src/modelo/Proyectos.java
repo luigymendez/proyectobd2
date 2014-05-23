@@ -7,6 +7,7 @@ package modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -32,10 +35,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Proyectos.findAll", query = "SELECT p FROM Proyectos p"),
     @NamedQuery(name = "Proyectos.findById", query = "SELECT p FROM Proyectos p WHERE p.id = :id"),
     @NamedQuery(name = "Proyectos.findByPeriodo", query = "SELECT p FROM Proyectos p WHERE p.periodo = :periodo"),
-    @NamedQuery(name = "Proyectos.findByTitulo", query = "SELECT p FROM Proyectos p WHERE p.titulo = :titulo"),
     @NamedQuery(name = "Proyectos.findByGrupo", query = "SELECT p FROM Proyectos p WHERE p.grupo = :grupo"),
-    @NamedQuery(name = "Proyectos.findByEmpresa", query = "SELECT p FROM Proyectos p WHERE p.empresa = :empresa"),
-    @NamedQuery(name = "Proyectos.findByNotaDefinitiva", query = "SELECT p FROM Proyectos p WHERE p.notaDefinitiva = :notaDefinitiva")})
+    @NamedQuery(name = "Proyectos.findByNotaDefinitiva", query = "SELECT p FROM Proyectos p WHERE p.notaDefinitiva = :notaDefinitiva"),
+    @NamedQuery(name = "Proyectos.findByFechaRecepcion", query = "SELECT p FROM Proyectos p WHERE p.fechaRecepcion = :fechaRecepcion"),
+    @NamedQuery(name = "Proyectos.findByHoraRecepcion", query = "SELECT p FROM Proyectos p WHERE p.horaRecepcion = :horaRecepcion")})
 public class Proyectos implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -47,25 +50,31 @@ public class Proyectos implements Serializable {
     @Column(name = "PERIODO")
     private String periodo;
     @Basic(optional = false)
-    @Column(name = "TITULO")
-    private String titulo;
     @Column(name = "GRUPO")
     private String grupo;
-    @Column(name = "EMPRESA")
-    private String empresa;
     @Column(name = "NOTA_DEFINITIVA")
     private Double notaDefinitiva;
+    @Basic(optional = false)
+    @Column(name = "FECHA_RECEPCION")
+    @Temporal(TemporalType.DATE)
+    private Date fechaRecepcion;
+    @Basic(optional = false)
+    @Column(name = "HORA_RECEPCION")
+    @Temporal(TemporalType.DATE)
+    private Date horaRecepcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectosId")
     private Collection<Asesorias> asesoriasCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectosId")
-    private Collection<Horarios> horariosCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectosId")
     private Collection<Entregas> entregasCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyectosId")
-    private Collection<Fichas> fichasCollection;
+    @JoinColumn(name = "HORARIOS_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Horarios horariosId;
     @JoinColumn(name = "ESTADOS_ID", referencedColumnName = "ID")
     @ManyToOne
     private Estados estadosId;
+    @JoinColumn(name = "EMPRESAS_ID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Empresas empresasId;
     @JoinColumn(name = "DOCENTES_IDENTIFICACION", referencedColumnName = "IDENTIFICACION")
     @ManyToOne
     private Docentes docentesIdentificacion;
@@ -80,10 +89,12 @@ public class Proyectos implements Serializable {
         this.id = id;
     }
 
-    public Proyectos(BigDecimal id, String periodo, String titulo) {
+    public Proyectos(BigDecimal id, String periodo, String grupo, Date fechaRecepcion, Date horaRecepcion) {
         this.id = id;
         this.periodo = periodo;
-        this.titulo = titulo;
+        this.grupo = grupo;
+        this.fechaRecepcion = fechaRecepcion;
+        this.horaRecepcion = horaRecepcion;
     }
 
     public BigDecimal getId() {
@@ -102,14 +113,6 @@ public class Proyectos implements Serializable {
         this.periodo = periodo;
     }
 
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
     public String getGrupo() {
         return grupo;
     }
@@ -118,20 +121,28 @@ public class Proyectos implements Serializable {
         this.grupo = grupo;
     }
 
-    public String getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(String empresa) {
-        this.empresa = empresa;
-    }
-
     public Double getNotaDefinitiva() {
         return notaDefinitiva;
     }
 
     public void setNotaDefinitiva(Double notaDefinitiva) {
         this.notaDefinitiva = notaDefinitiva;
+    }
+
+    public Date getFechaRecepcion() {
+        return fechaRecepcion;
+    }
+
+    public void setFechaRecepcion(Date fechaRecepcion) {
+        this.fechaRecepcion = fechaRecepcion;
+    }
+
+    public Date getHoraRecepcion() {
+        return horaRecepcion;
+    }
+
+    public void setHoraRecepcion(Date horaRecepcion) {
+        this.horaRecepcion = horaRecepcion;
     }
 
     @XmlTransient
@@ -144,15 +155,6 @@ public class Proyectos implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Horarios> getHorariosCollection() {
-        return horariosCollection;
-    }
-
-    public void setHorariosCollection(Collection<Horarios> horariosCollection) {
-        this.horariosCollection = horariosCollection;
-    }
-
-    @XmlTransient
     public Collection<Entregas> getEntregasCollection() {
         return entregasCollection;
     }
@@ -161,13 +163,12 @@ public class Proyectos implements Serializable {
         this.entregasCollection = entregasCollection;
     }
 
-    @XmlTransient
-    public Collection<Fichas> getFichasCollection() {
-        return fichasCollection;
+    public Horarios getHorariosId() {
+        return horariosId;
     }
 
-    public void setFichasCollection(Collection<Fichas> fichasCollection) {
-        this.fichasCollection = fichasCollection;
+    public void setHorariosId(Horarios horariosId) {
+        this.horariosId = horariosId;
     }
 
     public Estados getEstadosId() {
@@ -176,6 +177,14 @@ public class Proyectos implements Serializable {
 
     public void setEstadosId(Estados estadosId) {
         this.estadosId = estadosId;
+    }
+
+    public Empresas getEmpresasId() {
+        return empresasId;
+    }
+
+    public void setEmpresasId(Empresas empresasId) {
+        this.empresasId = empresasId;
     }
 
     public Docentes getDocentesIdentificacion() {

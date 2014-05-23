@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Entregas.findAll", query = "SELECT e FROM Entregas e"),
     @NamedQuery(name = "Entregas.findById", query = "SELECT e FROM Entregas e WHERE e.id = :id"),
     @NamedQuery(name = "Entregas.findByFecha", query = "SELECT e FROM Entregas e WHERE e.fecha = :fecha"),
-    @NamedQuery(name = "Entregas.findByDescripcion", query = "SELECT e FROM Entregas e WHERE e.descripcion = :descripcion")})
+    @NamedQuery(name = "Entregas.findByObservaciones", query = "SELECT e FROM Entregas e WHERE e.observaciones = :observaciones")})
 public class Entregas implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -46,13 +46,13 @@ public class Entregas implements Serializable {
     @Column(name = "FECHA")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Column(name = "DESCRIPCION")
-    private String descripcion;
+    @Column(name = "OBSERVACIONES")
+    private String observaciones;
     @JoinColumn(name = "PROYECTOS_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Proyectos proyectosId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "entregasId")
-    private Collection<Entregables> entregablesCollection;
+    private Collection<Documentos> documentosCollection;
 
     public Entregas() {
     }
@@ -77,12 +77,12 @@ public class Entregas implements Serializable {
         this.fecha = fecha;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getObservaciones() {
+        return observaciones;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public Proyectos getProyectosId() {
@@ -94,12 +94,12 @@ public class Entregas implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Entregables> getEntregablesCollection() {
-        return entregablesCollection;
+    public Collection<Documentos> getDocumentosCollection() {
+        return documentosCollection;
     }
 
-    public void setEntregablesCollection(Collection<Entregables> entregablesCollection) {
-        this.entregablesCollection = entregablesCollection;
+    public void setDocumentosCollection(Collection<Documentos> documentosCollection) {
+        this.documentosCollection = documentosCollection;
     }
 
     @Override

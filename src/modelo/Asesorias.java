@@ -6,7 +6,6 @@ package modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -16,12 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,14 +30,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Asesorias.findAll", query = "SELECT a FROM Asesorias a"),
     @NamedQuery(name = "Asesorias.findById", query = "SELECT a FROM Asesorias a WHERE a.id = :id"),
-    @NamedQuery(name = "Asesorias.findByPeriodo", query = "SELECT a FROM Asesorias a WHERE a.periodo = :periodo"),
-    @NamedQuery(name = "Asesorias.findByTitulo", query = "SELECT a FROM Asesorias a WHERE a.titulo = :titulo"),
-    @NamedQuery(name = "Asesorias.findByGrupo", query = "SELECT a FROM Asesorias a WHERE a.grupo = :grupo"),
     @NamedQuery(name = "Asesorias.findByCompromisos", query = "SELECT a FROM Asesorias a WHERE a.compromisos = :compromisos"),
     @NamedQuery(name = "Asesorias.findByRealizada", query = "SELECT a FROM Asesorias a WHERE a.realizada = :realizada"),
     @NamedQuery(name = "Asesorias.findByFecha", query = "SELECT a FROM Asesorias a WHERE a.fecha = :fecha"),
     @NamedQuery(name = "Asesorias.findByHoraInicio", query = "SELECT a FROM Asesorias a WHERE a.horaInicio = :horaInicio"),
-    @NamedQuery(name = "Asesorias.findByHoraFin", query = "SELECT a FROM Asesorias a WHERE a.horaFin = :horaFin")})
+    @NamedQuery(name = "Asesorias.findByHoraFinalizacion", query = "SELECT a FROM Asesorias a WHERE a.horaFinalizacion = :horaFinalizacion"),
+    @NamedQuery(name = "Asesorias.findByResumen", query = "SELECT a FROM Asesorias a WHERE a.resumen = :resumen")})
 public class Asesorias implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -49,32 +44,27 @@ public class Asesorias implements Serializable {
     @Column(name = "ID")
     private BigDecimal id;
     @Basic(optional = false)
-    @Column(name = "PERIODO")
-    private String periodo;
-    @Basic(optional = false)
-    @Column(name = "TITULO")
-    private String titulo;
-    @Basic(optional = false)
-    @Column(name = "GRUPO")
-    private String grupo;
     @Column(name = "COMPROMISOS")
     private String compromisos;
     @Column(name = "REALIZADA")
     private Character realizada;
+    @Basic(optional = false)
     @Column(name = "FECHA")
     @Temporal(TemporalType.DATE)
     private Date fecha;
+    @Basic(optional = false)
     @Column(name = "HORA_INICIO")
     @Temporal(TemporalType.DATE)
     private Date horaInicio;
-    @Column(name = "HORA_FIN")
+    @Basic(optional = false)
+    @Column(name = "HORA_FINALIZACION")
     @Temporal(TemporalType.DATE)
-    private Date horaFin;
+    private Date horaFinalizacion;
+    @Column(name = "RESUMEN")
+    private String resumen;
     @JoinColumn(name = "PROYECTOS_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Proyectos proyectosId;
-    @OneToMany(mappedBy = "asesoriasId")
-    private Collection<Horarios> horariosCollection;
 
     public Asesorias() {
     }
@@ -83,11 +73,12 @@ public class Asesorias implements Serializable {
         this.id = id;
     }
 
-    public Asesorias(BigDecimal id, String periodo, String titulo, String grupo) {
+    public Asesorias(BigDecimal id, String compromisos, Date fecha, Date horaInicio, Date horaFinalizacion) {
         this.id = id;
-        this.periodo = periodo;
-        this.titulo = titulo;
-        this.grupo = grupo;
+        this.compromisos = compromisos;
+        this.fecha = fecha;
+        this.horaInicio = horaInicio;
+        this.horaFinalizacion = horaFinalizacion;
     }
 
     public BigDecimal getId() {
@@ -96,30 +87,6 @@ public class Asesorias implements Serializable {
 
     public void setId(BigDecimal id) {
         this.id = id;
-    }
-
-    public String getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(String periodo) {
-        this.periodo = periodo;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getGrupo() {
-        return grupo;
-    }
-
-    public void setGrupo(String grupo) {
-        this.grupo = grupo;
     }
 
     public String getCompromisos() {
@@ -154,12 +121,20 @@ public class Asesorias implements Serializable {
         this.horaInicio = horaInicio;
     }
 
-    public Date getHoraFin() {
-        return horaFin;
+    public Date getHoraFinalizacion() {
+        return horaFinalizacion;
     }
 
-    public void setHoraFin(Date horaFin) {
-        this.horaFin = horaFin;
+    public void setHoraFinalizacion(Date horaFinalizacion) {
+        this.horaFinalizacion = horaFinalizacion;
+    }
+
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
     }
 
     public Proyectos getProyectosId() {
@@ -168,15 +143,6 @@ public class Asesorias implements Serializable {
 
     public void setProyectosId(Proyectos proyectosId) {
         this.proyectosId = proyectosId;
-    }
-
-    @XmlTransient
-    public Collection<Horarios> getHorariosCollection() {
-        return horariosCollection;
-    }
-
-    public void setHorariosCollection(Collection<Horarios> horariosCollection) {
-        this.horariosCollection = horariosCollection;
     }
 
     @Override

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Estados.findAll", query = "SELECT e FROM Estados e"),
     @NamedQuery(name = "Estados.findById", query = "SELECT e FROM Estados e WHERE e.id = :id"),
     @NamedQuery(name = "Estados.findByNombreEstado", query = "SELECT e FROM Estados e WHERE e.nombreEstado = :nombreEstado"),
-    @NamedQuery(name = "Estados.findByTipoEstado", query = "SELECT e FROM Estados e WHERE e.tipoEstado = :tipoEstado")})
+    @NamedQuery(name = "Estados.findByModulo", query = "SELECT e FROM Estados e WHERE e.modulo = :modulo")})
 public class Estados implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -41,20 +41,17 @@ public class Estados implements Serializable {
     @Basic(optional = false)
     @Column(name = "NOMBRE_ESTADO")
     private String nombreEstado;
-    @Column(name = "TIPO_ESTADO")
-    private String tipoEstado;
+    @Basic(optional = false)
+    @Column(name = "MODULO")
+    private String modulo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadosId")
     private Collection<Ideas> ideasCollection;
-    @OneToMany(mappedBy = "estadosId")
-    private Collection<Anteproyecto> anteproyectoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadosId")
     private Collection<Propuestas> propuestasCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadosId")
-    private Collection<Entregables> entregablesCollection;
-    @OneToMany(mappedBy = "estadosId")
-    private Collection<Fichas> fichasCollection;
     @OneToMany(mappedBy = "estadosId")
     private Collection<Proyectos> proyectosCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "estadosId")
+    private Collection<Documentos> documentosCollection;
     @OneToMany(mappedBy = "estadosId")
     private Collection<Sustentaciones> sustentacionesCollection;
 
@@ -65,9 +62,10 @@ public class Estados implements Serializable {
         this.id = id;
     }
 
-    public Estados(BigDecimal id, String nombreEstado) {
+    public Estados(BigDecimal id, String nombreEstado, String modulo) {
         this.id = id;
         this.nombreEstado = nombreEstado;
+        this.modulo = modulo;
     }
 
     public BigDecimal getId() {
@@ -86,12 +84,12 @@ public class Estados implements Serializable {
         this.nombreEstado = nombreEstado;
     }
 
-    public String getTipoEstado() {
-        return tipoEstado;
+    public String getModulo() {
+        return modulo;
     }
 
-    public void setTipoEstado(String tipoEstado) {
-        this.tipoEstado = tipoEstado;
+    public void setModulo(String modulo) {
+        this.modulo = modulo;
     }
 
     @XmlTransient
@@ -104,15 +102,6 @@ public class Estados implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Anteproyecto> getAnteproyectoCollection() {
-        return anteproyectoCollection;
-    }
-
-    public void setAnteproyectoCollection(Collection<Anteproyecto> anteproyectoCollection) {
-        this.anteproyectoCollection = anteproyectoCollection;
-    }
-
-    @XmlTransient
     public Collection<Propuestas> getPropuestasCollection() {
         return propuestasCollection;
     }
@@ -122,30 +111,21 @@ public class Estados implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Entregables> getEntregablesCollection() {
-        return entregablesCollection;
-    }
-
-    public void setEntregablesCollection(Collection<Entregables> entregablesCollection) {
-        this.entregablesCollection = entregablesCollection;
-    }
-
-    @XmlTransient
-    public Collection<Fichas> getFichasCollection() {
-        return fichasCollection;
-    }
-
-    public void setFichasCollection(Collection<Fichas> fichasCollection) {
-        this.fichasCollection = fichasCollection;
-    }
-
-    @XmlTransient
     public Collection<Proyectos> getProyectosCollection() {
         return proyectosCollection;
     }
 
     public void setProyectosCollection(Collection<Proyectos> proyectosCollection) {
         this.proyectosCollection = proyectosCollection;
+    }
+
+    @XmlTransient
+    public Collection<Documentos> getDocumentosCollection() {
+        return documentosCollection;
+    }
+
+    public void setDocumentosCollection(Collection<Documentos> documentosCollection) {
+        this.documentosCollection = documentosCollection;
     }
 
     @XmlTransient

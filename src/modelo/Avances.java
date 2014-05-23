@@ -6,7 +6,6 @@ package modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -15,7 +14,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -39,7 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Avances.findById", query = "SELECT a FROM Avances a WHERE a.id = :id"),
     @NamedQuery(name = "Avances.findByDescripcion", query = "SELECT a FROM Avances a WHERE a.descripcion = :descripcion"),
     @NamedQuery(name = "Avances.findByFechaRecepcion", query = "SELECT a FROM Avances a WHERE a.fechaRecepcion = :fechaRecepcion"),
-    @NamedQuery(name = "Avances.findByRevisionRevisionId", query = "SELECT a FROM Avances a WHERE a.revisionRevisionId = :revisionRevisionId"),
     @NamedQuery(name = "Avances.findByHoraRecepcion", query = "SELECT a FROM Avances a WHERE a.horaRecepcion = :horaRecepcion")})
 public class Avances implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -55,12 +52,6 @@ public class Avances implements Serializable {
     @Column(name = "FECHA_RECEPCION")
     @Temporal(TemporalType.DATE)
     private Date fechaRecepcion;
-    @Lob
-    @Column(name = "ARCHIVO")
-    private Serializable archivo;
-    @Basic(optional = false)
-    @Column(name = "REVISION_REVISION_ID")
-    private BigInteger revisionRevisionId;
     @Basic(optional = false)
     @Column(name = "HORA_RECEPCION")
     @Temporal(TemporalType.DATE)
@@ -83,11 +74,10 @@ public class Avances implements Serializable {
         this.id = id;
     }
 
-    public Avances(BigDecimal id, String descripcion, Date fechaRecepcion, BigInteger revisionRevisionId, Date horaRecepcion) {
+    public Avances(BigDecimal id, String descripcion, Date fechaRecepcion, Date horaRecepcion) {
         this.id = id;
         this.descripcion = descripcion;
         this.fechaRecepcion = fechaRecepcion;
-        this.revisionRevisionId = revisionRevisionId;
         this.horaRecepcion = horaRecepcion;
     }
 
@@ -113,22 +103,6 @@ public class Avances implements Serializable {
 
     public void setFechaRecepcion(Date fechaRecepcion) {
         this.fechaRecepcion = fechaRecepcion;
-    }
-
-    public Serializable getArchivo() {
-        return archivo;
-    }
-
-    public void setArchivo(Serializable archivo) {
-        this.archivo = archivo;
-    }
-
-    public BigInteger getRevisionRevisionId() {
-        return revisionRevisionId;
-    }
-
-    public void setRevisionRevisionId(BigInteger revisionRevisionId) {
-        this.revisionRevisionId = revisionRevisionId;
     }
 
     public Date getHoraRecepcion() {

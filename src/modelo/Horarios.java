@@ -6,8 +6,10 @@ package modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,10 +17,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,12 +35,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Horarios.findAll", query = "SELECT h FROM Horarios h"),
     @NamedQuery(name = "Horarios.findById", query = "SELECT h FROM Horarios h WHERE h.id = :id"),
     @NamedQuery(name = "Horarios.findByDia", query = "SELECT h FROM Horarios h WHERE h.dia = :dia"),
-    @NamedQuery(name = "Horarios.findByPeriodo", query = "SELECT h FROM Horarios h WHERE h.periodo = :periodo"),
-    @NamedQuery(name = "Horarios.findByFechaInicio", query = "SELECT h FROM Horarios h WHERE h.fechaInicio = :fechaInicio"),
-    @NamedQuery(name = "Horarios.findByFechaTerminacion", query = "SELECT h FROM Horarios h WHERE h.fechaTerminacion = :fechaTerminacion"),
+    @NamedQuery(name = "Horarios.findByFechaInicioAsesoria", query = "SELECT h FROM Horarios h WHERE h.fechaInicioAsesoria = :fechaInicioAsesoria"),
+    @NamedQuery(name = "Horarios.findByFechaTerminacionAsesoria", query = "SELECT h FROM Horarios h WHERE h.fechaTerminacionAsesoria = :fechaTerminacionAsesoria"),
     @NamedQuery(name = "Horarios.findByHoraInicio", query = "SELECT h FROM Horarios h WHERE h.horaInicio = :horaInicio"),
-    @NamedQuery(name = "Horarios.findByHoraFinalizacion", query = "SELECT h FROM Horarios h WHERE h.horaFinalizacion = :horaFinalizacion"),
-    @NamedQuery(name = "Horarios.findByDisponible", query = "SELECT h FROM Horarios h WHERE h.disponible = :disponible")})
+    @NamedQuery(name = "Horarios.findByHoraFinalizacion", query = "SELECT h FROM Horarios h WHERE h.horaFinalizacion = :horaFinalizacion")})
 public class Horarios implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -46,28 +48,23 @@ public class Horarios implements Serializable {
     private BigDecimal id;
     @Column(name = "DIA")
     private String dia;
-    @Column(name = "PERIODO")
-    private String periodo;
-    @Column(name = "FECHA_INICIO")
+    @Column(name = "FECHA_INICIO_ASESORIA")
     @Temporal(TemporalType.DATE)
-    private Date fechaInicio;
-    @Column(name = "FECHA_TERMINACION")
+    private Date fechaInicioAsesoria;
+    @Column(name = "FECHA_TERMINACION_ASESORIA")
     @Temporal(TemporalType.DATE)
-    private Date fechaTerminacion;
+    private Date fechaTerminacionAsesoria;
     @Column(name = "HORA_INICIO")
     @Temporal(TemporalType.DATE)
     private Date horaInicio;
     @Column(name = "HORA_FINALIZACION")
     @Temporal(TemporalType.DATE)
     private Date horaFinalizacion;
-    @Column(name = "DISPONIBLE")
-    private Character disponible;
-    @JoinColumn(name = "PROYECTOS_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "DOCENTES_IDENTIFICACION", referencedColumnName = "IDENTIFICACION")
     @ManyToOne(optional = false)
-    private Proyectos proyectosId;
-    @JoinColumn(name = "ASESORIAS_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private Asesorias asesoriasId;
+    private Docentes docentesIdentificacion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "horariosId")
+    private Collection<Proyectos> proyectosCollection;
 
     public Horarios() {
     }
@@ -92,28 +89,20 @@ public class Horarios implements Serializable {
         this.dia = dia;
     }
 
-    public String getPeriodo() {
-        return periodo;
+    public Date getFechaInicioAsesoria() {
+        return fechaInicioAsesoria;
     }
 
-    public void setPeriodo(String periodo) {
-        this.periodo = periodo;
+    public void setFechaInicioAsesoria(Date fechaInicioAsesoria) {
+        this.fechaInicioAsesoria = fechaInicioAsesoria;
     }
 
-    public Date getFechaInicio() {
-        return fechaInicio;
+    public Date getFechaTerminacionAsesoria() {
+        return fechaTerminacionAsesoria;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public Date getFechaTerminacion() {
-        return fechaTerminacion;
-    }
-
-    public void setFechaTerminacion(Date fechaTerminacion) {
-        this.fechaTerminacion = fechaTerminacion;
+    public void setFechaTerminacionAsesoria(Date fechaTerminacionAsesoria) {
+        this.fechaTerminacionAsesoria = fechaTerminacionAsesoria;
     }
 
     public Date getHoraInicio() {
@@ -132,28 +121,21 @@ public class Horarios implements Serializable {
         this.horaFinalizacion = horaFinalizacion;
     }
 
-    public Character getDisponible() {
-        return disponible;
+    public Docentes getDocentesIdentificacion() {
+        return docentesIdentificacion;
     }
 
-    public void setDisponible(Character disponible) {
-        this.disponible = disponible;
+    public void setDocentesIdentificacion(Docentes docentesIdentificacion) {
+        this.docentesIdentificacion = docentesIdentificacion;
     }
 
-    public Proyectos getProyectosId() {
-        return proyectosId;
+    @XmlTransient
+    public Collection<Proyectos> getProyectosCollection() {
+        return proyectosCollection;
     }
 
-    public void setProyectosId(Proyectos proyectosId) {
-        this.proyectosId = proyectosId;
-    }
-
-    public Asesorias getAsesoriasId() {
-        return asesoriasId;
-    }
-
-    public void setAsesoriasId(Asesorias asesoriasId) {
-        this.asesoriasId = asesoriasId;
+    public void setProyectosCollection(Collection<Proyectos> proyectosCollection) {
+        this.proyectosCollection = proyectosCollection;
     }
 
     @Override
