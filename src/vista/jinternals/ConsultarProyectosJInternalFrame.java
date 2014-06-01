@@ -115,7 +115,7 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
         MDIAplicacion.desktopPane.removeAll();
-        FormularioProyectoJInternalFrame frmProyecto= new FormularioProyectoJInternalFrame();
+        FormularioProyectoJInternalFrame frmProyecto= new FormularioProyectoJInternalFrame(null);
         MDIAplicacion.desktopPane.add(frmProyecto);
         frmProyecto.setVisible(true);
     }//GEN-LAST:event_jButtonGuardarActionPerformed

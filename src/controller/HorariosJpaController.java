@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import modelo.Horarios;
 
 /**
@@ -28,8 +29,8 @@ import modelo.Horarios;
  */
 public class HorariosJpaController implements Serializable {
 
-    public HorariosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public HorariosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 

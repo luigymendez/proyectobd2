@@ -20,6 +20,10 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Anteproyecto;
 import modelo.Proyectos;
 
@@ -29,8 +33,8 @@ import modelo.Proyectos;
  */
 public class AnteproyectoJpaController implements Serializable {
 
-    public AnteproyectoJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public AnteproyectoJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -283,6 +287,61 @@ public class AnteproyectoJpaController implements Serializable {
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
+        }
+    }
+    
+     /**
+     * Este metodo hace una consulta con un like para encontrar los anteproyectos por el titulo
+     *
+     * @param valorDeBusqueda
+     * @return
+     */
+    public List<Anteproyecto> encontrarCoincidenciasPorTitulo(String valorDeBusqueda) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Anteproyecto> criteriaQuery = cb.createQuery(Anteproyecto.class);
+        Root<Anteproyecto> c = criteriaQuery.from(Anteproyecto.class);
+        criteriaQuery.select(c);
+        Expression<String> columnaDeBusqueda;
+
+        //Si el valor se pudo parsear la columna de busqueda sera la identificacion
+        columnaDeBusqueda = c.get("titulo");
+
+        criteriaQuery.where(
+                cb.and(
+                        cb.like(columnaDeBusqueda, "%" + valorDeBusqueda + "%")
+                )
+        );
+        TypedQuery<Anteproyecto> query = em.createQuery(criteriaQuery);
+        //para esta consulta con like solo entregaremos como maximo 10 resultados que se mostraran en la tabla
+        return query.getResultList();
+    }
+    
+        /**
+     * Este metodo retorna un anteproyecto por su titulo
+     *
+     * @param titulo
+     * @return
+     */
+    public Anteproyecto getAnteproyectoByTitulo(String titulo) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Anteproyecto> criteriaQuery = cb.createQuery(Anteproyecto.class);
+        Root<Anteproyecto> c = criteriaQuery.from(Anteproyecto.class);
+        criteriaQuery.select(c);
+        criteriaQuery.where(
+                cb.equal(c.get("titulo"), titulo)
+        );
+        TypedQuery<Anteproyecto> query = em.createQuery(criteriaQuery);
+        List<Anteproyecto> lista = query.getResultList();
+        if (lista != null) {
+            if (lista.size() > 0) {
+                return lista.get(0);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
     

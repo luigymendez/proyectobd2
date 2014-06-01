@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import modelo.Entregas;
 import modelo.Proyectos;
 
@@ -33,8 +34,8 @@ import modelo.Proyectos;
  */
 public class ProyectosJpaController implements Serializable {
 
-    public ProyectosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public ProyectosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
