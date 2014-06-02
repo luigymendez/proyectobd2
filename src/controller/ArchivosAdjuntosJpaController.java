@@ -19,8 +19,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.ArchivosAdjuntos;
 import modelo.Avances;
+import modelo.Entregas;
 import modelo.Ideas;
 import modelo.RevisionesAvance;
 import modelo.Sustentaciones;
@@ -353,6 +356,25 @@ public class ArchivosAdjuntosJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+       /**
+     * Este metodo retorna el siguiente id --> consecutivo
+     *
+     * @return
+     */
+    public BigDecimal getNextID() {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ArchivosAdjuntos> criteriaQuery = cb.createQuery(ArchivosAdjuntos.class);
+        Root<ArchivosAdjuntos> c = criteriaQuery.from(ArchivosAdjuntos.class);
+        Expression columnConsec = c.get("id");
+        criteriaQuery.select(cb.max(columnConsec));
+        Query query = em.createQuery(criteriaQuery);
+        BigDecimal num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() + 1);
+
+        System.err.println(num);
+        return num;
     }
     
 }

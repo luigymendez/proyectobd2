@@ -113,7 +113,7 @@ public class ControlProyectos {
         int hora = TecladoException.getEntero(args[4].toString());
         int minuto = TecladoException.getEntero(args[5].toString());
         Empresas empresa = empresasJpaController.getEmpresasByNombre(args[6].toString());
-        Anteproyecto antProy = null;
+        Anteproyecto antProy = anteproyectoJpaController.getAnteproyectoByTitulo(args[7].toString());
         for (Estados estado : estados) {
             if (estado.getNombreEstado().equals(args[9].toString())) {
                 estadoActual = estado;
@@ -124,9 +124,7 @@ public class ControlProyectos {
             if (fechaRecepcion != null) {
                 if (empresa != null) {
                     if (antProy != null) {
-                        proyecto.setAnteproyectoId(antProy);
-                        proyecto.setDocentesIdentificacion(null);
-
+                          proyecto.setAnteproyectoId(antProy);
                         proyecto.setEmpresasId(empresa);
                         proyecto.setEstadosId(estadoActual);
                         proyecto.setFechaRecepcion(fechaRecepcion);
@@ -137,17 +135,19 @@ public class ControlProyectos {
                         if (args[8].toString().length() > 0) {
                             proyecto.setNotaDefinitiva(TecladoException.getDouble(args[8].toString()));
                         }
-                        proyecto.setHorariosId(null);
                         proyecto.setPeriodo(periodo);
                     }
                 } else {
                     mensajeAlerta = "Se debe especificar la empresa u organización beneficiaria";
+                    proyecto = null;
                 }
             } else {
                 mensajeAlerta = "La fecha de recepción es obligatoria";
+                proyecto = null;
             }
         } else {
             mensajeAlerta = "El grupo es obligatorio";
+            proyecto = null;
         }
         if (proyecto == null) {
             JOptionPane.showMessageDialog(null, mensajeAlerta);

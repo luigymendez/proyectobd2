@@ -2,13 +2,16 @@ package vista.jinternals;
 
 import control.objects.ControlEntregas;
 import controller.ArchivosAdjuntosJpaController;
+import controller.DocumentosArchivosJpaController;
 import controller.DocumentosJpaController;
 import controller.EntregasJpaController;
 import controller.EstadosJpaController;
 import controller.ProyectosJpaController;
+import controller.exceptions.NonexistentEntityException;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
@@ -16,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.ArchivosAdjuntos;
 import modelo.Documentos;
+import modelo.DocumentosArchivos;
 import modelo.Entregas;
 import modelo.Estados;
 import modelo.Proyectos;
@@ -27,7 +31,9 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
     private ProyectosJpaController proyectosJpaController = new ProyectosJpaController();
     private ArchivosAdjuntosJpaController archivosAdjuntosJpaController = new ArchivosAdjuntosJpaController();
     DocumentosJpaController documentosJpaController = new DocumentosJpaController();
+    DocumentosArchivosJpaController documentosArchivosJpaController = new DocumentosArchivosJpaController();
     private Entregas entregaToModify;
+    private Documentos documentoToModify;
     private List<Estados> listaEstadosProyecto;
     private List<Estados> listaEstadosDocumentos;
     private ControlEntregas controlEntregas = new ControlEntregas();
@@ -44,14 +50,25 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
         cargarEstadosProyectoYDocumento();
 
         if (entregaToModify != null) {
+            jButtonGuardar.setText("Modificar");
             jTextAreaObservacion.setText(entregaToModify.getObservaciones());
-            Documentos documento = (Documentos) (entregaToModify.getDocumentosCollection().toArray()[0]);
-            jTextAreaValoracion.setText(documento.getValoracion());
-            jComboBoxTipo.setSelectedItem(documento.getTipo());
-            jComboBoxEstadoEntregable.setSelectedItem(documento.getEstadosId().getNombreEstado());
+            documentoToModify = (Documentos) (entregaToModify.getDocumentosCollection().toArray()[0]);
+            listaArchivosAdjuntos = (List) documentoToModify.getArchivosAdjuntosCollection();
+            cargarArchivos();
+            jTextAreaValoracion.setText(documentoToModify.getValoracion());
+            jComboBoxTipo.setSelectedItem(documentoToModify.getTipo());
+            jComboBoxEstadoEntregable.setSelectedItem(documentoToModify.getEstadosId().getNombreEstado());
             jComboBoxEstadoProyecto.setSelectedItem(entrega.getProyectosId().getEstadosId().getNombreEstado());
         }
 
+    }
+
+    private void cargarArchivos() {
+        for (ArchivosAdjuntos archivos : listaArchivosAdjuntos) {
+
+            String[] splitter = archivos.getUrl().split("\\\\");
+            agregarFila(splitter[splitter.length - 1]);
+        }
     }
 
     private void cargarEstadosProyectoYDocumento() {
@@ -90,7 +107,7 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
         jLabel1 = new javax.swing.JLabel();
         jButtonGuardar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jButtonAdjuntar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTableArchivosAdjuntos = new javax.swing.JTable();
         jButtonAbrir = new javax.swing.JButton();
@@ -125,24 +142,19 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBoxEstadoEntregable, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
                         .addComponent(jComboBoxTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel1))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jLabel1)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(59, 59, 59)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5)
@@ -186,11 +198,11 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivos adjuntos"));
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Basic-Paper-clip-icon.png"))); // NOI18N
-        jButton1.setText("Adjuntar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAdjuntar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Basic-Paper-clip-icon.png"))); // NOI18N
+        jButtonAdjuntar.setText("Adjuntar");
+        jButtonAdjuntar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonAdjuntarActionPerformed(evt);
             }
         });
 
@@ -216,7 +228,7 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(jButtonAdjuntar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonAbrir)
@@ -227,7 +239,7 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jButton1)
+                .addComponent(jButtonAdjuntar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
@@ -265,21 +277,23 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
-        if (entregaToModify == null) {
+        Estados estadoActualProyecto = null;
+        String observ = jTextAreaObservacion.getText();
+        String valr = jTextAreaValoracion.getText();
+        String tipo = jComboBoxTipo.getSelectedItem().toString();
+        String estadoEntregable = jComboBoxEstadoEntregable.getSelectedItem().toString();
+        String estadoProyecto = jComboBoxEstadoProyecto.getSelectedItem().toString();
 
-            Estados estadoActualProyecto = null;
-            String observ = jTextAreaObservacion.getText();
-            String valr = jTextAreaValoracion.getText();
-            String tipo = jComboBoxTipo.getSelectedItem().toString();
-            String estadoEntregable = jComboBoxEstadoEntregable.getSelectedItem().toString();
-            String estadoProyecto = jComboBoxEstadoProyecto.getSelectedItem().toString();
+        if (entregaToModify == null) {
 
             Entregas entrega = controlEntregas.crearObjetoEntregas(observ, proyectoActual);
             if (entrega != null) {
                 try {
+                    entrega.setId(entregasJpaController.getNextID());
                     entregasJpaController.create(entrega);
                     List<Entregas> listaEntregas = entregasJpaController.findEntregasEntities();
                     Documentos documento = controlEntregas.crearObjetoDocumento(valr, tipo, estadoEntregable, listaEstadosDocumentos, listaEntregas.get(listaEntregas.size() - 1));
+                    documento.setId(documentosJpaController.getNextID());
                     documentosJpaController.create(documento);
                     //Miramos si se el proyecto ha cambiado de estado , si esto ha pasado lo actualizamos
                     for (Estados estados : listaEstadosProyecto) {
@@ -291,22 +305,69 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
                     //Finalmente guardamos los archivos adjuntos
                     if (listaArchivosAdjuntos.size() > 0) {
                         for (ArchivosAdjuntos archivosAdjuntos : listaArchivosAdjuntos) {
+                            archivosAdjuntos.setId(archivosAdjuntosJpaController.getNextID());
                             archivosAdjuntosJpaController.create(archivosAdjuntos);
-
+                            DocumentosArchivos documentosArchivos;
+                            documentosArchivos = new DocumentosArchivos(new BigInteger("" + archivosAdjuntos.getId().intValue()), new BigInteger("" + documento.getId().intValue()));
+                            documentosArchivosJpaController.create(documentosArchivos);
                         }
                     }
-                    JOptionPane.showMessageDialog(null, "La entrega se ha registrado correctamente","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                    //documento.setArchivosAdjuntosCollection(listaArchivosAdjuntos);
+                    //documentosJpaController.edit(documento);
+                    JOptionPane.showMessageDialog(null, "La entrega se ha registrado correctamente", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
                     System.err.println("No se pudo crear la entrega" + ex.getMessage());
                 }
 
             }
         } else {
+            Entregas entrega = controlEntregas.modificarObjetoEntregas(observ, proyectoActual, entregaToModify);
+            Documentos documento = controlEntregas.modificarObjetoDocumento(valr, tipo, estadoEntregable, listaEstadosDocumentos, documentoToModify);
+            if (entrega != null) {
+                try {
+                    entregasJpaController.edit(entrega);
+                    documentosJpaController.edit(documento);
+                } catch (NonexistentEntityException ex) {
+                    System.err.println("Error al editar la entrega"+ex.getMessage());
+                } catch (Exception ex) {
+                    System.err.println("Error al editar la entrega"+ex.getMessage());
+                }
 
+                //Miramos si se el proyecto ha cambiado de estado , si esto ha pasado lo actualizamos
+                for (Estados estados : listaEstadosProyecto) {
+                    if (estados.getNombreEstado().equals(estadoProyecto)) {
+                        estadoActualProyecto = estados;
+                    }
+                }
+
+                //Finalmente actualizamos los archivos adjuntos . Debemos comparar los archivos que habian
+                //antes de empezar a editar con los de la lista editada
+                List<ArchivosAdjuntos> listaVieja = (List) documentoToModify.getArchivosAdjuntosCollection();
+                if (listaArchivosAdjuntos.size() > listaVieja.size()) {
+                    // Esporque se adiccionaron nuevos archivos
+                    int size = listaVieja.size();
+                    for (int i = size; i < listaArchivosAdjuntos.size(); i++) {
+                        ArchivosAdjuntos archivosAdjuntos = listaArchivosAdjuntos.get(i);
+                        archivosAdjuntos.setId(archivosAdjuntosJpaController.getNextID());
+                        try {
+                            archivosAdjuntosJpaController.create(archivosAdjuntos);
+                            DocumentosArchivos documentosArchivos;
+                            documentosArchivos = new DocumentosArchivos(new BigInteger("" + archivosAdjuntos.getId().intValue()), new BigInteger("" + documento.getId().intValue()));
+                            documentosArchivosJpaController.create(documentosArchivos);
+                        } catch (Exception ex) {
+                            System.err.println("Error al anexar archivos");
+                        }
+
+                    }
+                }
+                //documento.setArchivosAdjuntosCollection(listaArchivosAdjuntos);
+                //documentosJpaController.edit(documento);
+                JOptionPane.showMessageDialog(null, "La información de la entrega se ha actualizado correctamente", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonAdjuntarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdjuntarActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         int returnVal = fileChooser.showOpenDialog(this);
 
@@ -322,7 +383,7 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
         } else {
             System.err.println("Open command cancelled by user.");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonAdjuntarActionPerformed
 
     private void jButtonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAbrirActionPerformed
         int selectedRow;
@@ -338,7 +399,7 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
             JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo para listar abrir");
         }
         String[] splitter;
-        File file= null;
+        File file = null;
         if (selectedRow != -1 && listaArchivosAdjuntos.size() > 0) {
             System.out.println("Abriendo el archivo ...");
             for (ArchivosAdjuntos archivos : listaArchivosAdjuntos) {
@@ -348,7 +409,7 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
                     // Si coinciden los nombres de archivo lo abrimos
                     try {
                         try {
-                            String path = new File(".").getCanonicalPath()+"\\documentos\\"+nombreArchivo;
+                            String path = new File(".").getCanonicalPath() + "\\documentos\\" + nombreArchivo;
                             //JOptionPane.showMessageDialog(null, path);
                             file = new File(archivos.getUrl());
                         } catch (IOException ex) {
@@ -379,8 +440,8 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAbrir;
+    private javax.swing.JButton jButtonAdjuntar;
     private javax.swing.JButton jButtonGuardar;
     private javax.swing.JComboBox jComboBoxEstadoEntregable;
     private javax.swing.JComboBox jComboBoxEstadoProyecto;

@@ -10,7 +10,6 @@ import controller.HorariosJpaController;
 import controller.ProyectosJpaController;
 import controller.exceptions.NonexistentEntityException;
 import java.awt.event.KeyEvent;
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +24,7 @@ import modelo.Proyectos;
 import utilerias.EnviarEmail;
 import utilerias.Formateador;
 import utilerias.TecladoException;
+import vista.MDIAplicacion;
 
 public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame {
 
@@ -625,6 +625,9 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
     }//GEN-LAST:event_buttonBuscarEmpresaActionPerformed
 
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
+        Proyectos proyecto = null;
+        Horarios horario = null;
+
         Object argsHorario[] = new Object[7];
         argsHorario[0] = jComboBoxDiaHorario.getSelectedItem();
         argsHorario[1] = dateChooserFechaInicioHorario.getDate();
@@ -649,21 +652,23 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
         if (proyectoToModify == null) {
             //Se esta guardando
 
-            Proyectos proyecto = controlProyectos.crearObjetoProyecto(args, listaEstadosProyecto);
-            Horarios horario = controlHorariosProyecto.crearObjetoHorario(argsHorario);
+            proyecto = controlProyectos.crearObjetoProyecto(args, listaEstadosProyecto);
+            horario = controlHorariosProyecto.crearObjetoHorario(argsHorario);
             //Una vez tenemos el horario lo asignamos al proyecto
 
             if (proyecto != null && horario != null) {
-                proyecto.setHorariosId(horario);
+                //proyecto.setHorariosId(horario);
                 try {
                     //Primero creamos el horario de asesoria para el proyecto
-                    horario.setDocentesIdentificacion(docentesJpaController.findDocentes(BigDecimal.ONE));
+                    //horario.setDocentesIdentificacion(docentesJpaController.findDocentes(BigDecimal.ONE));
+                    horario.setId(horariosJpaController.getNextID());
                     horariosJpaController.create(horario);
                     //Una vez creado el horario , debemos pasarlo al proyecto como foranea , pero debemos
                     //hacer una consulta del el ultimo horario que acabamos de insertar , para que se traiga el registro
                     //con todos los datos y su id. Lo hacemos de una manera ineficiente .. obteniendo el ultimo registro
                     List<Horarios> listaHorarios = horariosJpaController.findHorariosEntities();
                     proyecto.setHorariosId(listaHorarios.get(listaHorarios.size() - 1));
+                    proyecto.setId(proyectosJpaController.getNextID());
                     proyectosJpaController.create(proyecto);
                     JOptionPane.showMessageDialog(null, "Se ha registrado correctamente el proyecto y su horario de asesorias.", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                     this.proyectoActual = proyecto;
@@ -674,8 +679,8 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
         } else {
             //Se esta modificando
 
-            Proyectos proyecto = controlProyectos.modificarObjetoProyecto(args, listaEstadosProyecto, proyectoToModify);
-            Horarios horario = controlHorariosProyecto.modificarObjetoHorario(argsHorario, proyectoToModify.getHorariosId());
+             proyecto = controlProyectos.modificarObjetoProyecto(args, listaEstadosProyecto, proyectoToModify);
+             horario = controlHorariosProyecto.modificarObjetoHorario(argsHorario, proyectoToModify.getHorariosId());
             //Una vez tenemos el horario lo asignamos al proyecto
 
             if (proyecto != null && horario != null) {
@@ -792,9 +797,9 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
             JOptionPane.showMessageDialog(null, "Se han enviado los emails a los estudiantes y al director", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (NonexistentEntityException ex) {
-            System.err.println("Error");
+            System.err.println("Error"+ex.getMessage());
         } catch (Exception ex) {
-            System.err.println("Error");
+            System.err.println("Error"+ex.getMessage());
         }
     }
 

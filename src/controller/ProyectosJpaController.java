@@ -25,6 +25,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Entregas;
 import modelo.Proyectos;
 
@@ -422,6 +424,25 @@ public class ProyectosJpaController implements Serializable {
             i++;
         }
         return registros;
+    }
+    
+    /**
+     * Este metodo retorna el siguiente id --> consecutivo
+     *
+     * @return
+     */
+    public BigDecimal getNextID() {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Proyectos> criteriaQuery = cb.createQuery(Proyectos.class);
+        Root<Proyectos> c = criteriaQuery.from(Proyectos.class);
+        Expression columnConsec = c.get("id");
+        criteriaQuery.select(cb.max(columnConsec));
+        Query query = em.createQuery(criteriaQuery);
+        BigDecimal num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() + 1);
+
+        System.err.println("sgte id : "+num);
+        return num;
     }
     
 }

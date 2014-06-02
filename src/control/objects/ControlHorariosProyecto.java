@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import modelo.Horarios;
-import modelo.Proyectos;
 import utilerias.Formateador;
 import utilerias.TecladoException;
 
@@ -109,12 +108,15 @@ public class ControlHorariosProyecto {
 
                 } else {
                     mensajeAlerta = "La hora esta en formato de 24 horas. Desde 00:00 a 23:59";
+                    horario = null;
                 }
             } else {
                 mensajeAlerta = "La fecha fin es obligatoria";
+                horario = null;
             }
         } else {
             mensajeAlerta = "La fecha de inicio es obligatoria";
+            horario = null;
         }
         if (horario == null) {
             JOptionPane.showMessageDialog(null, mensajeAlerta);

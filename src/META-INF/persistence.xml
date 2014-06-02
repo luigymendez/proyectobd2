@@ -24,6 +24,7 @@
     <class>modelo.Anteproyecto</class>
     <class>modelo.Integrantes</class>
     <class>modelo.RevisionesAvance</class>
+    <class>modelo.DocumentosArchivos</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
       <property name="javax.persistence.jdbc.password" value="system"/>

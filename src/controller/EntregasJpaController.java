@@ -23,6 +23,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Anteproyecto;
 import modelo.Entregas;
 
@@ -239,9 +240,10 @@ public class EntregasJpaController implements Serializable {
             em.close();
         }
     }
-    
-            /**
-     * Este metodo retorna una lista de las entregas que se han hecho de un proyecto
+
+    /**
+     * Este metodo retorna una lista de las entregas que se han hecho de un
+     * proyecto
      *
      * @param proyecto
      * @return
@@ -258,18 +260,37 @@ public class EntregasJpaController implements Serializable {
         TypedQuery<Entregas> query = em.createQuery(criteriaQuery);
         return query.getResultList();
     }
-    
-        public Object[][] getMatrizParaJTable(Proyectos proyecto) {
+
+    public Object[][] getMatrizParaJTable(Proyectos proyecto) {
         List<Entregas> listaEntregas = getEntregaByProyecto(proyecto);
-         Object[][] registros = new Object[listaEntregas.size()][3];
-         int i=0;
+        Object[][] registros = new Object[listaEntregas.size()][3];
+        int i = 0;
         for (Entregas entrega : listaEntregas) {
-            registros[i][0]= entrega.getId();
-            registros[i][1]= entrega.getFecha();
-            registros[i][2]= entrega.getObservaciones();
+            registros[i][0] = entrega.getId();
+            registros[i][1] = entrega.getFecha();
+            registros[i][2] = entrega.getObservaciones();
             i++;
         }
         return registros;
     }
-    
+
+    /**
+     * Este metodo retorna el siguiente id --> consecutivo
+     *
+     * @return
+     */
+    public BigDecimal getNextID() {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Entregas> criteriaQuery = cb.createQuery(Entregas.class);
+        Root<Entregas> c = criteriaQuery.from(Entregas.class);
+        Expression columnConsec = c.get("id");
+        criteriaQuery.select(cb.max(columnConsec));
+        Query query = em.createQuery(criteriaQuery);
+        BigDecimal num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() + 1);
+
+        System.err.println(num);
+        return num;
+    }
+
 }

@@ -123,7 +123,6 @@ public class ControlEntregas {
             }
         }
 
-        documento = new Documentos();
         documento.setEstadosId(estadoActualEntrega);
         documento.setTipo(tipo);
         documento.setValoracion(valoracion);
