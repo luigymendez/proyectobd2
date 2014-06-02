@@ -1,14 +1,69 @@
 package vista.jinternals;
 
+import control.objects.ControlEntregas;
+import controller.ArchivosAdjuntosJpaController;
+import controller.DocumentosJpaController;
 import controller.EntregasJpaController;
+import controller.EstadosJpaController;
+import controller.ProyectosJpaController;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelo.ArchivosAdjuntos;
+import modelo.Documentos;
+import modelo.Entregas;
+import modelo.Estados;
 import modelo.Proyectos;
 
 public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame {
 
-    EntregasJpaController entregasJpaController = new EntregasJpaController();
-    public FormularioEntregaJInternalFrame(Proyectos proyecto) {
+    private EntregasJpaController entregasJpaController = new EntregasJpaController();
+    private EstadosJpaController estadosJpaController = new EstadosJpaController();
+    private ProyectosJpaController proyectosJpaController = new ProyectosJpaController();
+    private ArchivosAdjuntosJpaController archivosAdjuntosJpaController = new ArchivosAdjuntosJpaController();
+    DocumentosJpaController documentosJpaController = new DocumentosJpaController();
+    private Entregas entregaToModify;
+    private List<Estados> listaEstadosProyecto;
+    private List<Estados> listaEstadosDocumentos;
+    private ControlEntregas controlEntregas = new ControlEntregas();
+    private Proyectos proyectoActual;
+    private List<ArchivosAdjuntos> listaArchivosAdjuntos;
+
+    private int filasTabla = 0;
+
+    public FormularioEntregaJInternalFrame(Entregas entrega, Proyectos proyecto) {
         initComponents();
-        
+        this.entregaToModify = entrega;
+        this.proyectoActual = proyecto;
+        listaArchivosAdjuntos = new ArrayList<ArchivosAdjuntos>();
+        cargarEstadosProyectoYDocumento();
+
+        if (entregaToModify != null) {
+            jTextAreaObservacion.setText(entregaToModify.getObservaciones());
+            Documentos documento = (Documentos) (entregaToModify.getDocumentosCollection().toArray()[0]);
+            jTextAreaValoracion.setText(documento.getValoracion());
+            jComboBoxTipo.setSelectedItem(documento.getTipo());
+            jComboBoxEstadoEntregable.setSelectedItem(documento.getEstadosId().getNombreEstado());
+            jComboBoxEstadoProyecto.setSelectedItem(entrega.getProyectosId().getEstadosId().getNombreEstado());
+        }
+
+    }
+
+    private void cargarEstadosProyectoYDocumento() {
+        listaEstadosProyecto = estadosJpaController.getEstadosByModulo("proyectos");
+        for (Estados estados : listaEstadosProyecto) {
+            jComboBoxEstadoProyecto.addItem(estados.getNombreEstado());
+        }
+
+        listaEstadosDocumentos = estadosJpaController.getEstadosByModulo("documentos");
+        for (Estados estados : listaEstadosDocumentos) {
+            jComboBoxEstadoEntregable.addItem(estados.getNombreEstado());
+        }
     }
 
     /**
@@ -24,16 +79,24 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaValoracion = new javax.swing.JTextArea();
+        jTextAreaObservacion = new javax.swing.JTextArea();
         jComboBoxTipo = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        jComboBoxEstado = new javax.swing.JComboBox();
-        jComboBoxProyecto = new javax.swing.JComboBox();
+        jComboBoxEstadoEntregable = new javax.swing.JComboBox();
+        jComboBoxEstadoProyecto = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextAreaValoracion = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
         jButtonGuardar = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTableArchivosAdjuntos = new javax.swing.JTable();
+        jButtonAbrir = new javax.swing.JButton();
 
         setClosable(true);
-        setTitle("Entregables proyecto");
+        setTitle("Entregas proyecto");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Entregable"));
 
@@ -41,72 +104,136 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
 
         jLabel5.setText("Valoracion entregable:");
 
-        jTextAreaValoracion.setColumns(20);
-        jTextAreaValoracion.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaValoracion);
+        jTextAreaObservacion.setColumns(20);
+        jTextAreaObservacion.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaObservacion);
 
         jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CD", "Documento impreso", "Artículo", "Carta", "Otro" }));
 
         jLabel6.setText("Estado del entregable:");
 
-        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Aprobado", "Pendiente", "No aprobado" }));
-
-        jComboBoxProyecto.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "En curso", "Terminado" }));
-
         jLabel7.setText("Estado del proyecto:");
 
-        jButtonGuardar.setText("Guardar");
+        jTextAreaValoracion.setColumns(20);
+        jTextAreaValoracion.setRows(5);
+        jScrollPane2.setViewportView(jTextAreaValoracion);
+
+        jLabel1.setText("Observaciones");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel6)
-                        .addComponent(jLabel7))
-                    .addComponent(jButtonGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jComboBoxProyecto, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBoxEstado, 0, 141, Short.MAX_VALUE))
-                        .addGap(154, 154, 154)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12))
+                        .addContainerGap()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxEstadoEntregable, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jComboBoxTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel1))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(59, 59, 59)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxEstadoProyecto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(jComboBoxProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1))
+                .addGap(24, 24, 24)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(jComboBoxEstadoProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jComboBoxEstadoEntregable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jButtonGuardar.setText("Guardar");
+        jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGuardarActionPerformed(evt);
+            }
+        });
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivos adjuntos"));
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Basic-Paper-clip-icon.png"))); // NOI18N
+        jButton1.setText("Adjuntar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jTableArchivosAdjuntos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Tipo", "Nombre"
+            }
+        ));
+        jScrollPane3.setViewportView(jTableArchivosAdjuntos);
+
+        jButtonAbrir.setText("Abrir archivo");
+        jButtonAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAbrirActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonAbrir)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(46, 46, 46))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jButtonAbrir))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -115,7 +242,11 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButtonGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -123,24 +254,149 @@ public class FormularioEntregaJInternalFrame extends javax.swing.JInternalFrame 
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
+        if (entregaToModify == null) {
+
+            Estados estadoActualProyecto = null;
+            String observ = jTextAreaObservacion.getText();
+            String valr = jTextAreaValoracion.getText();
+            String tipo = jComboBoxTipo.getSelectedItem().toString();
+            String estadoEntregable = jComboBoxEstadoEntregable.getSelectedItem().toString();
+            String estadoProyecto = jComboBoxEstadoProyecto.getSelectedItem().toString();
+
+            Entregas entrega = controlEntregas.crearObjetoEntregas(observ, proyectoActual);
+            if (entrega != null) {
+                try {
+                    entregasJpaController.create(entrega);
+                    List<Entregas> listaEntregas = entregasJpaController.findEntregasEntities();
+                    Documentos documento = controlEntregas.crearObjetoDocumento(valr, tipo, estadoEntregable, listaEstadosDocumentos, listaEntregas.get(listaEntregas.size() - 1));
+                    documentosJpaController.create(documento);
+                    //Miramos si se el proyecto ha cambiado de estado , si esto ha pasado lo actualizamos
+                    for (Estados estados : listaEstadosProyecto) {
+                        if (estados.getNombreEstado().equals(estadoProyecto)) {
+                            estadoActualProyecto = estados;
+                        }
+                    }
+
+                    //Finalmente guardamos los archivos adjuntos
+                    if (listaArchivosAdjuntos.size() > 0) {
+                        for (ArchivosAdjuntos archivosAdjuntos : listaArchivosAdjuntos) {
+                            archivosAdjuntosJpaController.create(archivosAdjuntos);
+
+                        }
+                    }
+                    JOptionPane.showMessageDialog(null, "La entrega se ha registrado correctamente","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    System.err.println("No se pudo crear la entrega" + ex.getMessage());
+                }
+
+            }
+        } else {
+
+        }
+    }//GEN-LAST:event_jButtonGuardarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            //This is where a real application would open the file.
+            System.out.println("Abriendo : " + file.getName());
+            ArchivosAdjuntos archivosAdjuntos = new ArchivosAdjuntos();
+            archivosAdjuntos.setTipo("archivo");
+            archivosAdjuntos.setUrl(file.getAbsolutePath());
+            listaArchivosAdjuntos.add(archivosAdjuntos);
+            agregarFila(file.getName());
+        } else {
+            System.err.println("Open command cancelled by user.");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButtonAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAbrirActionPerformed
+        int selectedRow;
+        String nombreArchivo = "";
+        selectedRow = jTableArchivosAdjuntos.getSelectedRow();
+        System.out.println("La columna seleccionada es :" + selectedRow);
+
+        try {
+            nombreArchivo = (jTableArchivosAdjuntos.getValueAt(selectedRow, 1).toString()); // Extraigo el dato
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo para listar abrir");
+        } catch (IndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un archivo para listar abrir");
+        }
+        String[] splitter;
+        File file= null;
+        if (selectedRow != -1 && listaArchivosAdjuntos.size() > 0) {
+            System.out.println("Abriendo el archivo ...");
+            for (ArchivosAdjuntos archivos : listaArchivosAdjuntos) {
+
+                splitter = archivos.getUrl().split("\\\\");
+                if (splitter[splitter.length - 1].equals(nombreArchivo)) {
+                    // Si coinciden los nombres de archivo lo abrimos
+                    try {
+                        try {
+                            String path = new File(".").getCanonicalPath()+"\\documentos\\"+nombreArchivo;
+                            //JOptionPane.showMessageDialog(null, path);
+                            file = new File(archivos.getUrl());
+                        } catch (IOException ex) {
+                            System.err.println("Error al abrir el archivo");
+                        }
+                        Desktop.getDesktop().open(file);
+                    } catch (IOException ex) {
+                        System.err.println("Error al abrir el archivo");
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_jButtonAbrirActionPerformed
+
+    private void agregarFila(String nombreArchivo) {
+// se crea un modelo para la tabla, el nombre de la variable de la tabla es: tabla
+        DefaultTableModel modelo = (DefaultTableModel) jTableArchivosAdjuntos.getModel();
+
+//se agrega la fila en la tabla con un valor vacio
+        modelo.addRow(new Object[filasTabla]);
+
+//para agregar valores en la fila
+        jTableArchivosAdjuntos.setValueAt("Archivo adjunto", filasTabla, 0);
+        jTableArchivosAdjuntos.setValueAt(nombreArchivo, filasTabla, 1);
+//primero va el valor del campoo despues el numero de la fila y por ultimo el numero de la columna
+        filasTabla++;
+//el numero de las filas y columnas empieza en cero
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonAbrir;
     private javax.swing.JButton jButtonGuardar;
-    private javax.swing.JComboBox jComboBoxEstado;
-    private javax.swing.JComboBox jComboBoxProyecto;
+    private javax.swing.JComboBox jComboBoxEstadoEntregable;
+    private javax.swing.JComboBox jComboBoxEstadoProyecto;
     private javax.swing.JComboBox jComboBoxTipo;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTableArchivosAdjuntos;
+    private javax.swing.JTextArea jTextAreaObservacion;
     private javax.swing.JTextArea jTextAreaValoracion;
     // End of variables declaration//GEN-END:variables
 }

@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import modelo.Documentos;
 
 /**
@@ -28,8 +29,8 @@ import modelo.Documentos;
  */
 public class DocumentosJpaController implements Serializable {
 
-    public DocumentosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public DocumentosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 

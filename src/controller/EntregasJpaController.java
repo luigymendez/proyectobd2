@@ -21,6 +21,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import modelo.Anteproyecto;
 import modelo.Entregas;
 
 /**
@@ -235,6 +238,38 @@ public class EntregasJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+            /**
+     * Este metodo retorna una lista de las entregas que se han hecho de un proyecto
+     *
+     * @param proyecto
+     * @return
+     */
+    public List<Entregas> getEntregaByProyecto(Proyectos proyecto) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Entregas> criteriaQuery = cb.createQuery(Entregas.class);
+        Root<Entregas> c = criteriaQuery.from(Entregas.class);
+        criteriaQuery.select(c);
+        criteriaQuery.where(
+                cb.equal(c.get("proyectosId"), proyecto)
+        );
+        TypedQuery<Entregas> query = em.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+    
+        public Object[][] getMatrizParaJTable(Proyectos proyecto) {
+        List<Entregas> listaEntregas = getEntregaByProyecto(proyecto);
+         Object[][] registros = new Object[listaEntregas.size()][3];
+         int i=0;
+        for (Entregas entrega : listaEntregas) {
+            registros[i][0]= entrega.getId();
+            registros[i][1]= entrega.getFecha();
+            registros[i][2]= entrega.getObservaciones();
+            i++;
+        }
+        return registros;
     }
     
 }

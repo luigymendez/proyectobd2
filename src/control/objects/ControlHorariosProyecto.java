@@ -20,7 +20,6 @@ import utilerias.TecladoException;
 public class ControlHorariosProyecto {
 
     String mensajeAlerta;
-    private Horarios horario = null;
 
     /**
      * El parametro args recibe args[0] = dia args[1] = fechainicio args[2] =
@@ -31,6 +30,7 @@ public class ControlHorariosProyecto {
      * @return
      */
     public Horarios crearObjetoHorario(Object args[]) {
+        Horarios horario = null;
         String dia = args[0].toString();
         Date fechaInicio = (Date) args[1];
         Date fechaFin = (Date) args[2];

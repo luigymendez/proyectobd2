@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import modelo.ArchivosAdjuntos;
 import modelo.Avances;
 import modelo.Ideas;
@@ -30,8 +31,8 @@ import modelo.Sustentaciones;
  */
 public class ArchivosAdjuntosJpaController implements Serializable {
 
-    public ArchivosAdjuntosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public ArchivosAdjuntosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
