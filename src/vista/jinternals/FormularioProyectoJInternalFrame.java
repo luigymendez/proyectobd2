@@ -47,6 +47,8 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
         //Cargamos los estados del modulo proyecto
         cargarEstadosProyecto();
         if (proyectoToModify != null) {
+            //Si el proyecto a modificar es diferente de null quiere decir que se esta actualizando
+            // y por lo tanto hay que llenar el formulario
             String split[] = proyectoToModify.getPeriodo().split("-");
             int anio = TecladoException.getEntero(split[0]);
             jYearChooser2.setYear(anio);
@@ -58,9 +60,26 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
             jTextFieldMinuto1.setText("" + cal.get(Calendar.MINUTE));
             jTextFieldEmpresa.setText(proyectoToModify.getEmpresasId().getNombre());
             jTextFieldAnteproyecto.setText(proyectoToModify.getAnteproyectoId().getTitulo());
-            jTextFieldNota.setText("" + proyectoToModify.getNotaDefinitiva());
+            if (proyectoToModify.getNotaDefinitiva() != null) {
+                jTextFieldNota.setText("" + proyectoToModify.getNotaDefinitiva());
+            }
             jComboBoxEstado.setSelectedItem(proyectoToModify.getEstadosId().getNombreEstado());
             jButtonOK.setText("Modificar");
+            Horarios horario = proyectoToModify.getHorariosId();
+            jComboBoxDiaHorario.setSelectedItem(horario.getDia());
+            dateChooserFechaInicioHorario.setDate(horario.getFechaInicioAsesoria());
+            dateChooserFechaFinHorario.setDate(horario.getFechaTerminacionAsesoria());
+            Calendar cal1 = Formateador.dateToCalendar(horario.getHoraInicio());
+            Calendar cal2 = Formateador.dateToCalendar(horario.getHoraFinalizacion());
+            jTextFieldHoraInicioHorario.setText("" + cal1.get(Calendar.HOUR_OF_DAY));
+            jTextFieldMinutoInicioHorario.setText("" + cal.get(Calendar.MINUTE));
+            jTextFieldHoraFinHorario.setText("" + cal2.get(Calendar.HOUR_OF_DAY));
+            jTextFieldMinutoFinHorario.setText("" + cal2.get(Calendar.MINUTE));
+            Docentes docenteDirector = proyectoToModify.getDocentesIdentificacion();
+            if (docenteDirector != null) {
+                jTextFieldIdDirector.setText("" + docenteDirector.getIdentificacion());
+                jTextFieldNombreDirector.setText("" + docenteDirector.getNombres());
+            }
         }
 
     }
@@ -593,34 +612,34 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
     }//GEN-LAST:event_buttonBuscarEmpresaActionPerformed
 
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
+        Object argsHorario[] = new Object[7];
+        argsHorario[0] = jComboBoxDiaHorario.getSelectedItem();
+        argsHorario[1] = dateChooserFechaInicioHorario.getDate();
+        argsHorario[2] = dateChooserFechaFinHorario.getDate();
+        argsHorario[3] = jTextFieldHoraInicioHorario.getText();
+        argsHorario[4] = jTextFieldMinutoInicioHorario.getText();;
+        argsHorario[5] = jTextFieldHoraFinHorario.getText();;
+        argsHorario[6] = jTextFieldMinutoFinHorario.getText();;
+
+        Object args[] = new Object[10];
+        args[0] = jYearChooser2.getYear();
+        args[1] = jComboBoxPeriodo.getSelectedItem().toString();
+        args[2] = jTextFieldGrupo.getText();
+        args[3] = fechaRecepcionDateChooser.getDate();
+        args[4] = jTextFieldHora1.getText();
+        args[5] = jTextFieldMinuto1.getText();
+        args[6] = jTextFieldEmpresa.getText();
+        args[7] = jTextFieldAnteproyecto.getText();
+        args[8] = jTextFieldNota.getText();
+        args[9] = jComboBoxEstado.getSelectedItem().toString();
+
         if (proyectoToModify == null) {
             //Se esta guardando
-
-            Object argsHorario[] = new Object[7];
-            argsHorario[0] = jComboBoxDiaHorario.getSelectedItem();
-            argsHorario[1] = dateChooserFechaInicioHorario.getDate();
-            argsHorario[2] = dateChooserFechaFinHorario.getDate();
-            argsHorario[3] = jTextFieldHoraInicioHorario.getText();
-            argsHorario[4] = jTextFieldMinutoInicioHorario.getText();;
-            argsHorario[5] = jTextFieldHoraFinHorario.getText();;
-            argsHorario[6] = jTextFieldMinutoFinHorario.getText();;
-
-            Object args[] = new Object[10];
-            args[0] = jYearChooser2.getYear();
-            args[1] = jComboBoxPeriodo.getSelectedItem().toString();
-            args[2] = jTextFieldGrupo.getText();
-            args[3] = fechaRecepcionDateChooser.getDate();
-            args[4] = jTextFieldHora1.getText();
-            args[5] = jTextFieldMinuto1.getText();
-            args[6] = jTextFieldEmpresa.getText();
-            args[7] = jTextFieldAnteproyecto.getText();
-            args[8] = jTextFieldNota.getText();
-            args[9] = jComboBoxEstado.getSelectedItem().toString();
 
             Proyectos proyecto = controlProyectos.crearObjetoProyecto(args, listaEstadosProyecto);
             Horarios horario = controlHorariosProyecto.crearObjetoHorario(argsHorario);
             //Una vez tenemos el horario lo asignamos al proyecto
-           
+
             if (proyecto != null && horario != null) {
                 proyecto.setHorariosId(horario);
                 try {
@@ -631,15 +650,31 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
                     //hacer una consulta del el ultimo horario que acabamos de insertar , para que se traiga el registro
                     //con todos los datos y su id. Lo hacemos de una manera ineficiente .. obteniendo el ultimo registro
                     List<Horarios> listaHorarios = horariosJpaController.findHorariosEntities();
-                    proyecto.setHorariosId(listaHorarios.get(listaHorarios.size()-1));
+                    proyecto.setHorariosId(listaHorarios.get(listaHorarios.size() - 1));
                     proyectosJpaController.create(proyecto);
-                    JOptionPane.showMessageDialog(null, "Se ha registrado correctamente el proyecto y su horario de asesorias.","Mensaje",JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Se ha registrado correctamente el proyecto y su horario de asesorias.", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error inesperado : " + ex.getMessage(), "Mensaje error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
             //Se esta modificando
+
+            Proyectos proyecto = controlProyectos.modificarObjetoProyecto(args, listaEstadosProyecto, proyectoToModify);
+            Horarios horario = controlHorariosProyecto.modificarObjetoHorario(argsHorario, proyectoToModify.getHorariosId());
+            //Una vez tenemos el horario lo asignamos al proyecto
+
+            if (proyecto != null && horario != null) {
+                proyecto.setHorariosId(horario);
+                try {
+                    //Primero creamos el horario de asesoria para el proyecto
+                    horariosJpaController.edit(horario);
+                    proyectosJpaController.edit(proyecto);
+                    JOptionPane.showMessageDialog(null, "Se ha modificado correctamente la información del proyecto", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error inesperado : " + ex.getMessage(), "Mensaje error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
 
 
@@ -696,12 +731,12 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
     }//GEN-LAST:event_jTextFieldAnteproyectoKeyPressed
 
     private void buttonBuscarDirectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarDirectorActionPerformed
-        List<Docentes> listDocentes =docentesJpaController.encontrarCoincidenciasPorIdNombre(jTextFieldDirector.getText());
-        if(listDocentes.size() >0){
-            jTextFieldNombreDirector.setText( listDocentes.get(0).getNombres());
-            jTextFieldIdDirector.setText(""+listDocentes.get(0).getIdentificacion());
+        List<Docentes> listDocentes = docentesJpaController.encontrarCoincidenciasPorIdNombre(jTextFieldDirector.getText());
+        if (listDocentes.size() > 0) {
+            jTextFieldNombreDirector.setText(listDocentes.get(0).getNombres());
+            jTextFieldIdDirector.setText("" + listDocentes.get(0).getIdentificacion());
         }
-        
+
     }//GEN-LAST:event_buttonBuscarDirectorActionPerformed
 
 

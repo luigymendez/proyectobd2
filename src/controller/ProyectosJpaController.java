@@ -407,4 +407,21 @@ public class ProyectosJpaController implements Serializable {
         }
     }
     
+    public Object[][] getMatrizParaJTable() {
+        List<Proyectos> listaProyectos = findProyectosEntities();
+         Object[][] registros = new Object[listaProyectos.size()][7];
+         int i=0;
+        for (Proyectos proyectos : listaProyectos) {
+            registros[i][0]= proyectos.getId();
+            registros[i][1]= proyectos.getAnteproyectoId().getTitulo();
+            registros[i][2]= proyectos.getPeriodo();
+            registros[i][3]= proyectos.getGrupo();
+            registros[i][4]= proyectos.getEstadosId().getNombreEstado();
+            registros[i][5]= proyectos.getNotaDefinitiva();
+            registros[i][6]= proyectos.getEmpresasId().getNombre();
+            i++;
+        }
+        return registros;
+    }
+    
 }

@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package vista.jinternals;
 
+import controller.ProyectosJpaController;
+import java.math.BigDecimal;
+import javax.swing.JOptionPane;
+import modelo.Proyectos;
 import vista.MDIAplicacion;
 
 /**
@@ -17,7 +20,14 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
     /**
      * Creates new form ConsultarProyectosJInternalFrame
      */
+    ProyectosJpaController proyectosJpaController = new ProyectosJpaController();
+    Object[][] registrosJTable;
+
+    //Formulario
+    FormularioProyectoJInternalFrame frmProyecto;
+
     public ConsultarProyectosJInternalFrame() {
+        registrosJTable = proyectosJpaController.getMatrizParaJTable();
         initComponents();
     }
 
@@ -37,7 +47,7 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jButtonBuscar = new javax.swing.JButton();
         jButtonReportes = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableProyectos = new javax.swing.JTable();
 
         jToolBar1.setRollover(true);
 
@@ -56,6 +66,11 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jButtonModificar.setFocusable(false);
         jButtonModificar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonModificar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButtonModificar);
 
         jButtonEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete-file-icon.png"))); // NOI18N
@@ -76,18 +91,14 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jButtonReportes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButtonReportes);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
+        jTableProyectos.setModel(new javax.swing.table.DefaultTableModel(
+            registrosJTable,
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Id","Titulo", "Periodo", "Grupo", "Estado", "Nota", "Empresa"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jTableProyectos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(jTableProyectos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,18 +107,18 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
                     .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addGap(38, 38, 38))
         );
 
         pack();
@@ -115,10 +126,35 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
         MDIAplicacion.desktopPane.removeAll();
-        FormularioProyectoJInternalFrame frmProyecto= new FormularioProyectoJInternalFrame(null);
+        frmProyecto = new FormularioProyectoJInternalFrame(null);
         MDIAplicacion.desktopPane.add(frmProyecto);
         frmProyecto.setVisible(true);
     }//GEN-LAST:event_jButtonGuardarActionPerformed
+
+    private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
+        int selectedRow, codigo;
+        Proyectos proyecto = null;
+        selectedRow = jTableProyectos.getSelectedRow();
+        System.out.println("La columna seleccionada es :" + selectedRow);
+        codigo = Integer.parseInt(jTableProyectos.getValueAt(selectedRow, 0).toString()); // Extraigo el dato
+        try {
+            proyecto = proyectosJpaController.findProyectos(new BigDecimal(codigo));
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún elemento");
+        } catch (IndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún elemento");
+        }
+
+        if (selectedRow != -1 && proyecto != null) {
+            System.out.println("Llamando la modificacion");
+            MDIAplicacion.desktopPane.removeAll();
+            frmProyecto = new FormularioProyectoJInternalFrame(proyecto);
+            MDIAplicacion.desktopPane.add(frmProyecto);
+            frmProyecto.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún elemento");
+        }
+    }//GEN-LAST:event_jButtonModificarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -128,7 +164,7 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
     private javax.swing.JButton jButtonModificar;
     private javax.swing.JButton jButtonReportes;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableProyectos;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 }

@@ -111,6 +111,7 @@ public class ControlProyectos {
             args[9] = jComboBoxEstado.getSelectedItem().toString();
      * @param args
      * @param estados
+     * @param proyecto
      * @return
      */
     public Proyectos modificarObjetoProyecto(Object args[],List<Estados> estados,Proyectos proyecto) {
