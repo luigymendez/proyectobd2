@@ -250,6 +250,7 @@ public class DocumentosJpaController implements Serializable {
      * @return
      */
     public BigDecimal getNextID() {
+        BigDecimal num;
         EntityManager em = getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Documentos> criteriaQuery = cb.createQuery(Documentos.class);
@@ -257,7 +258,11 @@ public class DocumentosJpaController implements Serializable {
         Expression columnConsec = c.get("id");
         criteriaQuery.select(cb.max(columnConsec));
         Query query = em.createQuery(criteriaQuery);
-        BigDecimal num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() +1);
+        if(getDocumentosCount() > 0 ){
+         num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() +1);
+        }else{
+            num = new BigDecimal(1);
+        }
         
         System.err.println(num);
         return num;

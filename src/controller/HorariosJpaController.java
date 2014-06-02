@@ -244,6 +244,7 @@ public class HorariosJpaController implements Serializable {
      * @return
      */
     public BigDecimal getNextID() {
+        BigDecimal num;
         EntityManager em = getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Horarios> criteriaQuery = cb.createQuery(Horarios.class);
@@ -251,9 +252,13 @@ public class HorariosJpaController implements Serializable {
         Expression columnConsec = c.get("id");
         criteriaQuery.select(cb.max(columnConsec));
         Query query = em.createQuery(criteriaQuery);
-        BigDecimal num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() +1);
+        if(getHorariosCount()>0){
+         num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() +1);
         
         System.err.println(num);
+        }else{
+            num = new BigDecimal(1);
+        }
         return num;
     }
     
