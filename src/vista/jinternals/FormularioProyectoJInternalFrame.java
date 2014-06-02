@@ -8,9 +8,11 @@ import controller.EmpresasJpaController;
 import controller.EstadosJpaController;
 import controller.HorariosJpaController;
 import controller.ProyectosJpaController;
+import controller.exceptions.NonexistentEntityException;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Anteproyecto;
@@ -18,7 +20,9 @@ import modelo.Docentes;
 import modelo.Empresas;
 import modelo.Estados;
 import modelo.Horarios;
+import modelo.Integrantes;
 import modelo.Proyectos;
+import utilerias.EnviarEmail;
 import utilerias.Formateador;
 import utilerias.TecladoException;
 
@@ -31,6 +35,8 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
     DocentesJpaController docentesJpaController = new DocentesJpaController();
     HorariosJpaController horariosJpaController = new HorariosJpaController();
     Proyectos proyectoToModify;
+    private Proyectos proyectoActual;
+    private Docentes directorAsignado;
 
     private List<Estados> listaEstadosProyecto;
     private List<Empresas> listaEmpresas;
@@ -154,6 +160,7 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
         jTextFieldIdDirector = new javax.swing.JTextField();
         jTextFieldNombreDirector = new javax.swing.JTextField();
         buttonBuscarDirector = new javax.swing.JButton();
+        jButtonAsignarDirector = new javax.swing.JButton();
 
         jFileChooser1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -177,6 +184,7 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
         );
 
         setClosable(true);
+        setMaximizable(true);
         setTitle("Formulario Proyecto");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Horario de asesorías"));
@@ -428,7 +436,6 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
                         .addComponent(jTextFieldGrupo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(buttonBuscarAntProy, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -440,7 +447,6 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(fechaRecepcionDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -494,6 +500,13 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
             }
         });
 
+        jButtonAsignarDirector.setText("Asignar");
+        jButtonAsignarDirector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAsignarDirectorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -506,21 +519,21 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jTextFieldDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonBuscarDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(buttonBuscarDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonAsignarDirector)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel25)
+                                .addGap(45, 45, 45)
+                                .addComponent(jTextFieldNombreDirector))
+                            .addComponent(jLabel23)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel24)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextFieldIdDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(70, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel25)
-                        .addGap(45, 45, 45)
-                        .addComponent(jTextFieldNombreDirector))
-                    .addComponent(jLabel23)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel24)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextFieldIdDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(131, 131, 131))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -538,13 +551,12 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
                         .addContainerGap())
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel24)
-                                    .addComponent(jTextFieldIdDirector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(buttonBuscarDirector, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel24)
+                                .addComponent(jTextFieldIdDirector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonAsignarDirector))
+                            .addComponent(buttonBuscarDirector))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel25)
                             .addComponent(jTextFieldNombreDirector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -556,25 +568,26 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(23, 23, 23))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(17, 17, 17)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
         );
 
         pack();
@@ -653,6 +666,7 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
                     proyecto.setHorariosId(listaHorarios.get(listaHorarios.size() - 1));
                     proyectosJpaController.create(proyecto);
                     JOptionPane.showMessageDialog(null, "Se ha registrado correctamente el proyecto y su horario de asesorias.", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                    this.proyectoActual = proyecto;
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error inesperado : " + ex.getMessage(), "Mensaje error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -733,12 +747,56 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
     private void buttonBuscarDirectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarDirectorActionPerformed
         List<Docentes> listDocentes = docentesJpaController.encontrarCoincidenciasPorIdNombre(jTextFieldDirector.getText());
         if (listDocentes.size() > 0) {
-            jTextFieldNombreDirector.setText(listDocentes.get(0).getNombres());
-            jTextFieldIdDirector.setText("" + listDocentes.get(0).getIdentificacion());
+            jTextFieldDirector.setText(listDocentes.get(0).getNombres());
+            directorAsignado = listDocentes.get(0);
         }
 
     }//GEN-LAST:event_buttonBuscarDirectorActionPerformed
 
+    private void jButtonAsignarDirectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAsignarDirectorActionPerformed
+
+        if (proyectoToModify == null) {
+            if (proyectoActual != null) {
+                asignarDirectorYEnviarEmails(proyectoActual);
+            } else {
+                JOptionPane.showMessageDialog(null, "Primero debe crear el proyecto y luego si asignar el director");
+            }
+        } else {
+            asignarDirectorYEnviarEmails(proyectoToModify);
+        }
+
+    }//GEN-LAST:event_jButtonAsignarDirectorActionPerformed
+
+    private void asignarDirectorYEnviarEmails(Proyectos proyectoActual) {
+        EnviarEmail mail = new EnviarEmail();
+        Boolean et;
+        proyectoActual.setDocentesIdentificacion(directorAsignado);
+        try {
+            proyectosJpaController.edit(proyectoActual);
+            // if (busqueda.matches("^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,4}$")) {
+            Collection<Integrantes> listaIntegrantes = proyectoActual.getAnteproyectoId().getPropuestasId().getIdeasId().getIntegrantesCollection();
+            String mensajeIntegrantes = "Titulo del proyecto : " + proyectoActual.getAnteproyectoId().getTitulo() + "\n\nIntegrantes :\n";
+            int i = 0;
+            for (Integrantes integrantes : listaIntegrantes) {
+                mensajeIntegrantes += "Nombre : " + integrantes.getNombres() + " " + integrantes.getApellidos() + "     Email : " + integrantes.getEmail1() + "\n";
+                i++;
+            }
+            mensajeIntegrantes += proyectoActual.getHorariosId().toString();
+            //Envamos un correo al director asignado y luego a todos los integrantes del proyecto
+            mail.send(directorAsignado.getCorreoInstitucional(), "ASIGNACIÓN PROYECTO GRADO PARA DIRECCIÓN", mensajeIntegrantes);
+            mensajeIntegrantes += "\n\nDirector asignado:\nNombre : " + directorAsignado.getNombres() + "\nCorreo : " + directorAsignado.getCorreoInstitucional();
+            //Ahora se le envia a cada integrante un email
+            for (Integrantes integrantes : listaIntegrantes) {
+                mail.send(integrantes.getEmail1(), "ASIGNACIÓN DIRECTOR", mensajeIntegrantes);
+            }
+            JOptionPane.showMessageDialog(null, "Se han enviado los emails a los estudiantes y al director", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NonexistentEntityException ex) {
+            System.err.println("Error");
+        } catch (Exception ex) {
+            System.err.println("Error");
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog archivoDialog;
@@ -748,6 +806,7 @@ public class FormularioProyectoJInternalFrame extends javax.swing.JInternalFrame
     private com.toedter.calendar.JDateChooser dateChooserFechaFinHorario;
     private com.toedter.calendar.JDateChooser dateChooserFechaInicioHorario;
     private com.toedter.calendar.JDateChooser fechaRecepcionDateChooser;
+    private javax.swing.JButton jButtonAsignarDirector;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JComboBox jComboBoxDiaHorario;
     private javax.swing.JComboBox jComboBoxEstado;

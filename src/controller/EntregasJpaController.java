@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import modelo.Entregas;
 
 /**
@@ -28,8 +29,8 @@ import modelo.Entregas;
  */
 public class EntregasJpaController implements Serializable {
 
-    public EntregasJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public EntregasJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 

@@ -48,6 +48,10 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jButtonReportes = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProyectos = new javax.swing.JTable();
+        jButtonRegistrarEntrega = new javax.swing.JButton();
+
+        setClosable(true);
+        setMaximizable(true);
 
         jToolBar1.setRollover(true);
 
@@ -100,6 +104,8 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jTableProyectos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jTableProyectos);
 
+        jButtonRegistrarEntrega.setText("Registrar entrega");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,18 +113,25 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonRegistrarEntrega)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE))
+                        .addGap(21, 21, 21))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
-                .addGap(38, 38, 38))
+                .addContainerGap()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonRegistrarEntrega, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -136,8 +149,9 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         Proyectos proyecto = null;
         selectedRow = jTableProyectos.getSelectedRow();
         System.out.println("La columna seleccionada es :" + selectedRow);
-        codigo = Integer.parseInt(jTableProyectos.getValueAt(selectedRow, 0).toString()); // Extraigo el dato
+
         try {
+            codigo = Integer.parseInt(jTableProyectos.getValueAt(selectedRow, 0).toString()); // Extraigo el dato
             proyecto = proyectosJpaController.findProyectos(new BigDecimal(codigo));
         } catch (ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún elemento");
@@ -151,8 +165,6 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
             frmProyecto = new FormularioProyectoJInternalFrame(proyecto);
             MDIAplicacion.desktopPane.add(frmProyecto);
             frmProyecto.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "No ha seleccionado ningún elemento");
         }
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
@@ -162,6 +174,7 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
     private javax.swing.JButton jButtonEliminar;
     private javax.swing.JButton jButtonGuardar;
     private javax.swing.JButton jButtonModificar;
+    private javax.swing.JButton jButtonRegistrarEntrega;
     private javax.swing.JButton jButtonReportes;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProyectos;

@@ -51,9 +51,10 @@ public class ControlHorariosProyecto {
                     calInicio.set(Calendar.HOUR_OF_DAY, horaInicio);
                     calInicio.set(Calendar.MINUTE, minutoInicio);
                     horario.setHoraInicio(Formateador.calendarToDate(calInicio));
-                    fechaFin.setHours(horaFin);
-                    fechaFin.setMinutes(minutoFin);
-                    horario.setHoraFinalizacion(fechaFin);
+                    Calendar calFin = Calendar.getInstance();
+                    calFin.set(Calendar.HOUR_OF_DAY, horaFin);
+                    calFin.set(Calendar.MINUTE, minutoFin);
+                    horario.setHoraFinalizacion(Formateador.calendarToDate(calInicio));
 
                 } else {
                     mensajeAlerta = "La hora esta en formato de 24 horas. Desde 00:00 a 23:59";
@@ -101,9 +102,10 @@ public class ControlHorariosProyecto {
                     calInicio.set(Calendar.HOUR_OF_DAY, horaInicio);
                     calInicio.set(Calendar.MINUTE, minutoInicio);
                     horario.setHoraInicio(Formateador.calendarToDate(calInicio));
-                    fechaFin.setHours(horaFin);
-                    fechaFin.setMinutes(minutoFin);
-                    horario.setHoraFinalizacion(fechaFin);
+                    Calendar calFin = Calendar.getInstance();
+                    calFin.set(Calendar.HOUR_OF_DAY, horaFin);
+                    calFin.set(Calendar.MINUTE, minutoFin);
+                    horario.setHoraFinalizacion(Formateador.calendarToDate(calInicio));
 
                 } else {
                     mensajeAlerta = "La hora esta en formato de 24 horas. Desde 00:00 a 23:59";

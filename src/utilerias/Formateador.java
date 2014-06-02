@@ -32,7 +32,7 @@ public class Formateador {
 
     /**
      * Este metodo parsea un objeto calendar a un tipo de date con el formato
-     * para ser guardado en mysql yyyy-MM-dd hh:mm:ss
+     * para ser guardado en oracle dd/mm/ hh:mm:ss
      *
      * @param calendar
      * @return

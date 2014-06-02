@@ -216,7 +216,7 @@ public class MDIAplicacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMItemRegistrarEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemRegistrarEntregaActionPerformed
-        formularioEntregaJInternal = new FormularioEntregaJInternalFrame();
+        formularioEntregaJInternal = new FormularioEntregaJInternalFrame(null);
         desktopPane.add(formularioEntregaJInternal);
         formularioEntregaJInternal.show();
     }//GEN-LAST:event_jMItemRegistrarEntregaActionPerformed
