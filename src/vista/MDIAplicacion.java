@@ -5,6 +5,11 @@
  */
 package vista;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import vista.jinternals.FormularioProyectoJInternalFrame;
 import vista.jinternals.FormularioEntregaJInternalFrame;
 import vista.jinternals.AsignarDirectorJInternalFrame;
@@ -25,7 +30,7 @@ public class MDIAplicacion extends javax.swing.JFrame {
     ReportesJInternalFrame reportesJInternal;
 
     public MDIAplicacion() {
-        initComponents();
+        initComponents();   
     }
 
     /**
@@ -60,6 +65,17 @@ public class MDIAplicacion extends javax.swing.JFrame {
         jMItemEjecutarSust = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
+        desktopPane.setLayout(desktopPaneLayout);
+        desktopPaneLayout.setHorizontalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1199, Short.MAX_VALUE)
+        );
+        desktopPaneLayout.setVerticalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 723, Short.MAX_VALUE)
+        );
 
         jMenuIdeas.setText("Ideas");
         jMenuIdeas.setPreferredSize(new java.awt.Dimension(45, 19));
@@ -194,18 +210,18 @@ public class MDIAplicacion extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1218, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(desktopPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 755, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(desktopPane)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMItemRegistrarEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemRegistrarEntregaActionPerformed
-        formularioEntregaJInternal = new FormularioEntregaJInternalFrame();
+        //formularioEntregaJInternal = new FormularioEntregaJInternalFrame(null);
         desktopPane.add(formularioEntregaJInternal);
         formularioEntregaJInternal.show();
     }//GEN-LAST:event_jMItemRegistrarEntregaActionPerformed

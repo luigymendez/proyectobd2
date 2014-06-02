@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Entregas;
 import modelo.Proyectos;
 
@@ -33,8 +36,8 @@ import modelo.Proyectos;
  */
 public class ProyectosJpaController implements Serializable {
 
-    public ProyectosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public ProyectosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -404,6 +407,46 @@ public class ProyectosJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public Object[][] getMatrizParaJTable() {
+        List<Proyectos> listaProyectos = findProyectosEntities();
+         Object[][] registros = new Object[listaProyectos.size()][7];
+         int i=0;
+        for (Proyectos proyectos : listaProyectos) {
+            registros[i][0]= proyectos.getId();
+            registros[i][1]= proyectos.getAnteproyectoId().getTitulo();
+            registros[i][2]= proyectos.getPeriodo();
+            registros[i][3]= proyectos.getGrupo();
+            registros[i][4]= proyectos.getEstadosId().getNombreEstado();
+            registros[i][5]= proyectos.getNotaDefinitiva();
+            registros[i][6]= proyectos.getEmpresasId().getNombre();
+            i++;
+        }
+        return registros;
+    }
+    
+    /**
+     * Este metodo retorna el siguiente id --> consecutivo
+     *
+     * @return
+     */
+    public BigDecimal getNextID() {
+        BigDecimal num;
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Proyectos> criteriaQuery = cb.createQuery(Proyectos.class);
+        Root<Proyectos> c = criteriaQuery.from(Proyectos.class);
+        Expression columnConsec = c.get("id");
+        criteriaQuery.select(cb.max(columnConsec));
+        Query query = em.createQuery(criteriaQuery);
+        if(getProyectosCount() > 0 ){
+             num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() + 1);
+        }else{
+            num = new BigDecimal(1);
+        }
+        System.err.println("sgte id : "+num);
+        return num;
     }
     
 }

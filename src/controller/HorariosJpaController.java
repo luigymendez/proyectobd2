@@ -20,6 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Horarios;
 
 /**
@@ -28,8 +31,8 @@ import modelo.Horarios;
  */
 public class HorariosJpaController implements Serializable {
 
-    public HorariosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public HorariosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -234,6 +237,29 @@ public class HorariosJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+        /**
+     * Este metodo retorna el siguiente id --> consecutivo
+     * @return
+     */
+    public BigDecimal getNextID() {
+        BigDecimal num;
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Horarios> criteriaQuery = cb.createQuery(Horarios.class);
+        Root<Horarios> c = criteriaQuery.from(Horarios.class);
+        Expression columnConsec = c.get("id");
+        criteriaQuery.select(cb.max(columnConsec));
+        Query query = em.createQuery(criteriaQuery);
+        if(getHorariosCount()>0){
+         num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() +1);
+        
+        System.err.println(num);
+        }else{
+            num = new BigDecimal(1);
+        }
+        return num;
     }
     
 }

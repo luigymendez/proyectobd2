@@ -5,9 +5,10 @@
  */
 package vista.jinternals;
 
-import controller.ProyectosJpaController;
+import controller.EntregasJpaController;
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
+import modelo.Entregas;
 import modelo.Proyectos;
 import vista.MDIAplicacion;
 
@@ -15,20 +16,21 @@ import vista.MDIAplicacion;
  *
  * @author LuigyMendez
  */
-public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame {
+public class ConsultarEntregasJInternalFrame extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form ConsultarProyectosJInternalFrame
      */
-    private ProyectosJpaController proyectosJpaController = new ProyectosJpaController();
+    EntregasJpaController entregasJpaController = new EntregasJpaController();
     Object[][] registrosJTable;
 
     //Formulario
-    private FormularioProyectoJInternalFrame frmProyecto;
-    private ConsultarEntregasJInternalFrame consultarEntregas;
+    FormularioEntregaJInternalFrame frmEntrega;
+    private Proyectos proyectoActual;
 
-    public ConsultarProyectosJInternalFrame() {
-        registrosJTable = proyectosJpaController.getMatrizParaJTable();
+    public ConsultarEntregasJInternalFrame(Proyectos proyecto) {
+        registrosJTable = entregasJpaController.getMatrizParaJTable(proyecto);
+        this.proyectoActual = proyecto;
         initComponents();
     }
 
@@ -49,7 +51,6 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jButtonReportes = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProyectos = new javax.swing.JTable();
-        jButtonRegistrarEntrega = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -99,18 +100,11 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jTableProyectos.setModel(new javax.swing.table.DefaultTableModel(
             registrosJTable,
             new String [] {
-                "Id","Titulo", "Periodo", "Grupo", "Estado", "Nota", "Empresa"
+                "Id","Fecha", "Observaciones"
             }
         ));
         jTableProyectos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jTableProyectos);
-
-        jButtonRegistrarEntrega.setText("Gestionar entregas");
-        jButtonRegistrarEntrega.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRegistrarEntregaActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,15 +112,10 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonRegistrarEntrega)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE))
-                        .addGap(21, 21, 21))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,10 +123,8 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
                 .addContainerGap()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonRegistrarEntrega, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addGap(55, 55, 55))
         );
 
         pack();
@@ -145,58 +132,34 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
         MDIAplicacion.desktopPane.removeAll();
-        frmProyecto = new FormularioProyectoJInternalFrame(null);
-        MDIAplicacion.desktopPane.add(frmProyecto);
-        frmProyecto.setVisible(true);
+        frmEntrega = new FormularioEntregaJInternalFrame(null,proyectoActual);
+        MDIAplicacion.desktopPane.add(frmEntrega);
+        frmEntrega.setVisible(true);
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
         int selectedRow, codigo;
-        Proyectos proyecto = null;
+        Entregas entrega = null;
         selectedRow = jTableProyectos.getSelectedRow();
         System.out.println("La columna seleccionada es :" + selectedRow);
 
         try {
             codigo = Integer.parseInt(jTableProyectos.getValueAt(selectedRow, 0).toString()); // Extraigo el dato
-            proyecto = proyectosJpaController.findProyectos(new BigDecimal(codigo));
+            entrega = entregasJpaController.findEntregas(new BigDecimal(codigo));
         } catch (ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún elemento");
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún elemento");
         }
 
-        if (selectedRow != -1 && proyecto != null) {
+        if (selectedRow != -1 && entrega != null) {
             System.out.println("Llamando la modificacion");
             MDIAplicacion.desktopPane.removeAll();
-            frmProyecto = new FormularioProyectoJInternalFrame(proyecto);
-            MDIAplicacion.desktopPane.add(frmProyecto);
-            frmProyecto.setVisible(true);
+            frmEntrega = new FormularioEntregaJInternalFrame(entrega,proyectoActual);
+            MDIAplicacion.desktopPane.add(frmEntrega);
+            frmEntrega.setVisible(true);
         }
     }//GEN-LAST:event_jButtonModificarActionPerformed
-
-    private void jButtonRegistrarEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarEntregaActionPerformed
-      int selectedRow, codigo;
-        Proyectos proyecto = null;
-        selectedRow = jTableProyectos.getSelectedRow();
-        System.out.println("La columna seleccionada es :" + selectedRow);
-
-        try {
-            codigo = Integer.parseInt(jTableProyectos.getValueAt(selectedRow, 0).toString()); // Extraigo el dato
-            proyecto = proyectosJpaController.findProyectos(new BigDecimal(codigo));
-        } catch (ArrayIndexOutOfBoundsException e) {
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un proyecto para listar sus entregas");
-        } catch (IndexOutOfBoundsException e) {
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un proyecto para listar sus entregas");
-        }
-
-        if (selectedRow != -1 && proyecto != null) {
-            System.out.println("Llamando la modificacion");
-            MDIAplicacion.desktopPane.removeAll();
-            consultarEntregas = new ConsultarEntregasJInternalFrame(proyecto);
-            MDIAplicacion.desktopPane.add(consultarEntregas);
-            consultarEntregas.setVisible(true);
-        }
-    }//GEN-LAST:event_jButtonRegistrarEntregaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -204,7 +167,6 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
     private javax.swing.JButton jButtonEliminar;
     private javax.swing.JButton jButtonGuardar;
     private javax.swing.JButton jButtonModificar;
-    private javax.swing.JButton jButtonRegistrarEntrega;
     private javax.swing.JButton jButtonReportes;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProyectos;

@@ -39,6 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Docentes.findByCorreoInstitucional", query = "SELECT d FROM Docentes d WHERE d.correoInstitucional = :correoInstitucional"),
     @NamedQuery(name = "Docentes.findByCorreoPersonal", query = "SELECT d FROM Docentes d WHERE d.correoPersonal = :correoPersonal")})
 public class Docentes implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "CORREO_PERSONAL")
+    private String correoPersonal;
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
@@ -56,9 +59,6 @@ public class Docentes implements Serializable {
     private BigInteger telefono;
     @Column(name = "CORREO_INSTITUCIONAL")
     private String correoInstitucional;
-    @Basic(optional = false)
-    @Column(name = "CORREO_PERSONAL")
-    private BigInteger correoPersonal;
     @JoinTable(name = "DOCENTES_SUSTENTACIONES", joinColumns = {
         @JoinColumn(name = "DOCENTES_IDENTIFICACION", referencedColumnName = "IDENTIFICACION")}, inverseJoinColumns = {
         @JoinColumn(name = "SUSTENTACIONES_ID", referencedColumnName = "ID")})
@@ -83,7 +83,7 @@ public class Docentes implements Serializable {
         this.identificacion = identificacion;
     }
 
-    public Docentes(BigDecimal identificacion, String nombres, String apellidos, BigInteger telefono, BigInteger correoPersonal) {
+    public Docentes(BigDecimal identificacion, String nombres, String apellidos, BigInteger telefono, String correoPersonal) {
         this.identificacion = identificacion;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -131,11 +131,11 @@ public class Docentes implements Serializable {
         this.correoInstitucional = correoInstitucional;
     }
 
-    public BigInteger getCorreoPersonal() {
+    public String getCorreoPersonal() {
         return correoPersonal;
     }
 
-    public void setCorreoPersonal(BigInteger correoPersonal) {
+    public void setCorreoPersonal(String correoPersonal) {
         this.correoPersonal = correoPersonal;
     }
 
@@ -208,5 +208,6 @@ public class Docentes implements Serializable {
     public String toString() {
         return "modelo.Docentes[ identificacion=" + identificacion + " ]";
     }
+
     
 }

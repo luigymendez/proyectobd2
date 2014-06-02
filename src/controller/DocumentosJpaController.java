@@ -20,6 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Documentos;
 
 /**
@@ -28,8 +31,8 @@ import modelo.Documentos;
  */
 public class DocumentosJpaController implements Serializable {
 
-    public DocumentosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public DocumentosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -240,6 +243,29 @@ public class DocumentosJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+                /**
+     * Este metodo retorna el siguiente id --> consecutivo
+     * @return
+     */
+    public BigDecimal getNextID() {
+        BigDecimal num;
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Documentos> criteriaQuery = cb.createQuery(Documentos.class);
+        Root<Documentos> c = criteriaQuery.from(Documentos.class);
+        Expression columnConsec = c.get("id");
+        criteriaQuery.select(cb.max(columnConsec));
+        Query query = em.createQuery(criteriaQuery);
+        if(getDocumentosCount() > 0 ){
+         num = new BigDecimal(((BigDecimal) query.getSingleResult()).intValue() +1);
+        }else{
+            num = new BigDecimal(1);
+        }
+        
+        System.err.println(num);
+        return num;
     }
     
 }
