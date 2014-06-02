@@ -347,6 +347,17 @@ public class IdeasJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Ideas> traerIds(){ //es el metodo con el cual trabajo la query creada en Ideas
+        EntityManager em = getEntityManager();
+        try{
+           Query q = em.createNamedQuery("Ideas.findAllIds");//aqui invoco el query para llamarlo en el formulario
+           return q.getResultList();
+                      
+        } finally{
+            em.close();
+        }
+    }
 
     public Ideas findIdeas(BigDecimal id) {
         EntityManager em = getEntityManager();
