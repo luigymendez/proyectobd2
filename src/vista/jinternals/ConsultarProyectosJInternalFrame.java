@@ -74,6 +74,11 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jButtonReportes.setFocusable(false);
         jButtonReportes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonReportes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReportesActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButtonReportes);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -96,18 +101,18 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(59, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
@@ -119,6 +124,10 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         MDIAplicacion.desktopPane.add(frmProyecto);
         frmProyecto.setVisible(true);
     }//GEN-LAST:event_jButtonGuardarActionPerformed
+
+    private void jButtonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportesActionPerformed
+
+    }//GEN-LAST:event_jButtonReportesActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
