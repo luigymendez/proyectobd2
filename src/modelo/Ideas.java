@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Ideas.findAll", query = "SELECT i FROM Ideas i"),
+    @NamedQuery(name = "Ideas.findAllIds", query = "SELECT i.id FROM Ideas i"),//creo un query para traer todos los id nada más
     @NamedQuery(name = "Ideas.findById", query = "SELECT i FROM Ideas i WHERE i.id = :id"),
     @NamedQuery(name = "Ideas.findByPeriodo", query = "SELECT i FROM Ideas i WHERE i.periodo = :periodo"),
     @NamedQuery(name = "Ideas.findByGrupo", query = "SELECT i FROM Ideas i WHERE i.grupo = :grupo"),

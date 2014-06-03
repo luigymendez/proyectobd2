@@ -3,4 +3,8 @@ nbproject/**/*
 dist/**/*
 build/**/*
 /dist/
+<<<<<<< HEAD
 /build/
+=======
+documentos/**/*
+>>>>>>> e2f7a2d038bd913fedd28795c9f2a36d73dd7222

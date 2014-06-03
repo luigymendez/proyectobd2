@@ -19,11 +19,16 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Docentes;
 import modelo.Roles;
 import modelo.Usuarios;
 import modelo.Horarios;
 import modelo.Proyectos;
+import utilerias.TecladoException;
 
 /**
  *
@@ -31,8 +36,8 @@ import modelo.Proyectos;
  */
 public class DocentesJpaController implements Serializable {
 
-    public DocentesJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public DocentesJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -389,6 +394,46 @@ public class DocentesJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    
+    
+    
+    
+    
+    
+        /**
+     * Este metodo hace una consulta con un like, se hace un like inteligente porque
+     * se recibe un valor de busqueda que puede ser la identificacion o un nombre
+     * retorna los docentes con rol de director
+     * @param valorDeBusqueda
+     * @return 
+     */
+    public List<Docentes> encontrarCoincidenciasPorIdNombre(String valorDeBusqueda) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Docentes> criteriaQuery = cb.createQuery(Docentes.class);
+        Root<Docentes> c = criteriaQuery.from(Docentes.class);
+        criteriaQuery.select(c);
+        Expression<String> columnaDeBusqueda;
+        //Como el valor de busqueda puede ser un numero o un nombre , intentamos parsearlo a un long
+        // para ver si se hace la consulta por la identificacion , sino se hace por el nombre
+        long ident = TecladoException.getLong(valorDeBusqueda);
+        if (ident > 0) {
+            //Si el valor se pudo parsear la columna de busqueda sera la identificacion
+            columnaDeBusqueda= c.get("identificacion");
+        } else {
+            //Sino la columna de busqueda sera el nombres
+            columnaDeBusqueda= c.get("nombres");
+        } 
+        criteriaQuery.where(
+                        cb.like(columnaDeBusqueda,"%"+ valorDeBusqueda+"%")
+                
+        );
+        TypedQuery<Docentes> query = em.createQuery(criteriaQuery);
+        //para esta consulta con like solo entregaremos como maximo 10 resultados que se mostraran en la tabla
+        return query.getResultList();
+        
     }
     
 }

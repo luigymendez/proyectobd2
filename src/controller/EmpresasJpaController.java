@@ -19,7 +19,12 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import modelo.Empresas;
+import utilerias.TecladoException;
 
 /**
  *
@@ -27,8 +32,8 @@ import modelo.Empresas;
  */
 public class EmpresasJpaController implements Serializable {
 
-    public EmpresasJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public EmpresasJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -206,5 +211,62 @@ public class EmpresasJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    /**
+     * Este metodo retorna una empresa por buscada por el nombre
+     *
+     * @param nombre
+     * @return
+     */
+    public Empresas getEmpresasByNombre(String nombre) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Empresas> criteriaQuery = cb.createQuery(Empresas.class);
+        Root<Empresas> c = criteriaQuery.from(Empresas.class);
+        criteriaQuery.select(c);
+        criteriaQuery.where(
+                cb.equal(c.get("nombre"), nombre)
+        );
+        TypedQuery<Empresas> query = em.createQuery(criteriaQuery);
+        List<Empresas> lista = query.getResultList();
+        if (lista != null) {
+            if (lista.size() > 0) {
+                return lista.get(0);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Este metodo hace una consulta con un like, se hace un like inteligente
+     * porque se recibe un valor de busqueda que puede ser la identificacion o
+     * un nombre
+     *
+     * @param valorDeBusqueda
+     * @return
+     */
+    public List<Empresas> encontrarCoincidenciasPorNombre(String valorDeBusqueda) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Empresas> criteriaQuery = cb.createQuery(Empresas.class);
+        Root<Empresas> c = criteriaQuery.from(Empresas.class);
+        criteriaQuery.select(c);
+        Expression<String> columnaDeBusqueda;
+
+        //Si el valor se pudo parsear la columna de busqueda sera la identificacion
+        columnaDeBusqueda = c.get("nombre");
+
+        criteriaQuery.where(
+                cb.and(
+                        cb.like(columnaDeBusqueda, "%" + valorDeBusqueda + "%")
+                )
+        );
+        TypedQuery<Empresas> query = em.createQuery(criteriaQuery);
+        //para esta consulta con like solo entregaremos como maximo 10 resultados que se mostraran en la tabla
+        return query.getResultList();
+    }
+
 }

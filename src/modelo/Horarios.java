@@ -160,7 +160,9 @@ public class Horarios implements Serializable {
 
     @Override
     public String toString() {
-        return "modelo.Horarios[ id=" + id + " ]";
+        return "Información de horario de asesoría\n\n"+"Día : "+dia+"\nFecha inicio : "+
+                fechaInicioAsesoria+"\nFecha fin : "+fechaTerminacionAsesoria+"\nHora inicio : "+horaInicio
+                +"\nHora fin : "+horaFinalizacion;
     }
     
 }

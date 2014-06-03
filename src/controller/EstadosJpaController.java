@@ -19,6 +19,9 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import modelo.Propuestas;
 import modelo.Proyectos;
 import modelo.Documentos;
@@ -31,8 +34,8 @@ import modelo.Sustentaciones;
  */
 public class EstadosJpaController implements Serializable {
 
-    public EstadosJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public EstadosJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("SwingBDIIPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -413,6 +416,26 @@ public class EstadosJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    
+    /**
+     * Este metodo retorna una lista con los estados de un modulo en especifico
+     *
+     * @param modulo
+     * @return
+     */
+    public List<Estados> getEstadosByModulo(String modulo) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Estados> criteriaQuery = cb.createQuery(Estados.class);
+        Root<Estados> c = criteriaQuery.from(Estados.class);
+        criteriaQuery.select(c);
+        criteriaQuery.where(
+                cb.equal(c.get("modulo"), modulo)
+        );
+        TypedQuery<Estados> query = em.createQuery(criteriaQuery);
+        return query.getResultList();
     }
     
 }
