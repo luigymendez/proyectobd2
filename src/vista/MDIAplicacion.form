@@ -27,20 +27,20 @@
             <Property name="text" type="java.lang.String" value="Propuestas"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMItemRevisionPropuesta">
+            <MenuItem class="javax.swing.JMenuItem" name="jMItemRegistrarPropuesta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Revisar"/>
+                <Property name="text" type="java.lang.String" value="Registrar"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMItemRevisionPropuestaActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMItemRegistrarPropuestaActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMItemAdministrarPropuestas">
+            <MenuItem class="javax.swing.JMenuItem" name="jMItemAvancesPropuestas">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Administrar"/>
+                <Property name="text" type="java.lang.String" value="Avances y Revisiones"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMItemAdministrarPropuestasActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMItemAvancesPropuestasActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
