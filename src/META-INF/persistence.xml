@@ -26,17 +26,14 @@
     <class>modelo.RevisionesAvance</class>
     <class>modelo.DocumentosArchivos</class>
     <properties>
-<<<<<<< HEAD
       <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/sample"/>
       <property name="javax.persistence.jdbc.password" value="app"/>
       <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
       <property name="javax.persistence.jdbc.user" value="app"/>
-=======
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
       <property name="javax.persistence.jdbc.password" value="system"/>
       <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
       <property name="javax.persistence.jdbc.user" value="system"/>
->>>>>>> e2f7a2d038bd913fedd28795c9f2a36d73dd7222
       <property name="eclipselink.ddl-generation" value="create-tables"/>
     </properties>
   </persistence-unit>
