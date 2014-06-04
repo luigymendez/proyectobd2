@@ -94,6 +94,11 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         jButtonReportes.setFocusable(false);
         jButtonReportes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonReportes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReportesActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButtonReportes);
 
         jTableProyectos.setModel(new javax.swing.table.DefaultTableModel(
@@ -119,6 +124,11 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+<<<<<<< HEAD
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(59, Short.MAX_VALUE))
+=======
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonRegistrarEntrega)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -127,17 +137,25 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
                             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE))
                         .addGap(21, 21, 21))))
+>>>>>>> e2f7a2d038bd913fedd28795c9f2a36d73dd7222
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+<<<<<<< HEAD
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
+=======
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonRegistrarEntrega, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+>>>>>>> e2f7a2d038bd913fedd28795c9f2a36d73dd7222
         );
 
         pack();
@@ -150,6 +168,11 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
         frmProyecto.setVisible(true);
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
+<<<<<<< HEAD
+    private void jButtonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportesActionPerformed
+
+    }//GEN-LAST:event_jButtonReportesActionPerformed
+=======
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
         int selectedRow, codigo;
         Proyectos proyecto = null;
@@ -197,6 +220,7 @@ public class ConsultarProyectosJInternalFrame extends javax.swing.JInternalFrame
             consultarEntregas.setVisible(true);
         }
     }//GEN-LAST:event_jButtonRegistrarEntregaActionPerformed
+>>>>>>> e2f7a2d038bd913fedd28795c9f2a36d73dd7222
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
