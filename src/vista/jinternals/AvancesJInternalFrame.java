@@ -9,6 +9,8 @@ package vista.jinternals;
 import controller.AvancesJpaController;
 import controller.PropuestasJpaController;
 import controller.RevisionesAvanceJpaController;
+import controller.exceptions.IllegalOrphanException;
+import controller.exceptions.NonexistentEntityException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +52,7 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButtonModificarA1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -75,6 +78,9 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jTextFieldId = new javax.swing.JTextField();
+        jButtonBuscarA = new javax.swing.JButton();
+        jButtonModificarA = new javax.swing.JButton();
+        jButtonEliminarA = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jTextFieldPorcentaje = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
@@ -84,9 +90,20 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
         jTextAreaResumen = new javax.swing.JTextArea();
         jLabel13 = new javax.swing.JLabel();
         jTextFieldCalificacionTotal = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         jTextFieldIdR = new javax.swing.JTextField();
+        jButtonBuscarR = new javax.swing.JButton();
+        jButtonModificarR = new javax.swing.JButton();
+        jButtonEliminarR = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
+        jButtonModificarA1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit-file-icon.png"))); // NOI18N
+        jButtonModificarA1.setContentAreaFilled(false);
+        jButtonModificarA1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarA1ActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Revisión"));
 
@@ -140,6 +157,30 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
 
         jLabel6.setText("Id:");
 
+        jButtonBuscarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search-file-icon.png"))); // NOI18N
+        jButtonBuscarA.setContentAreaFilled(false);
+        jButtonBuscarA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarAActionPerformed(evt);
+            }
+        });
+
+        jButtonModificarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit-file-icon.png"))); // NOI18N
+        jButtonModificarA.setContentAreaFilled(false);
+        jButtonModificarA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarAActionPerformed(evt);
+            }
+        });
+
+        jButtonEliminarA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete-file-icon.png"))); // NOI18N
+        jButtonEliminarA.setContentAreaFilled(false);
+        jButtonEliminarA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEliminarAActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -149,28 +190,6 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jSpinnerMes, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jSpinnerDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jSpinnerAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinnerMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel6))
                         .addGap(18, 18, 18)
@@ -178,34 +197,75 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
                             .addComponent(jComboBoxPropuesta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonBuscarA)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel5)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jSpinnerMes, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jSpinnerDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jSpinnerAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jSpinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jSpinnerMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 2, Short.MAX_VALUE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(81, 81, 81)
+                                .addComponent(jButtonModificarA)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonEliminarA)
+                                .addGap(22, 22, 22)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jComboBoxPropuesta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jSpinnerAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinnerMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinnerDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jSpinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jSpinnerMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addContainerGap(83, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jComboBoxPropuesta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jSpinnerAno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinnerMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinnerDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(jSpinnerHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(jSpinnerMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(jButtonModificarA))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonEliminarA)
+                            .addComponent(jButtonBuscarA))))
+                .addContainerGap())
         );
 
         jLabel10.setText("Porcentaje:");
@@ -233,18 +293,35 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton1.setText("Registrar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jLabel14.setText("Id:");
 
         jTextFieldIdR.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldIdRActionPerformed(evt);
+            }
+        });
+
+        jButtonBuscarR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search-file-icon.png"))); // NOI18N
+        jButtonBuscarR.setContentAreaFilled(false);
+        jButtonBuscarR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarRActionPerformed(evt);
+            }
+        });
+
+        jButtonModificarR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit-file-icon.png"))); // NOI18N
+        jButtonModificarR.setContentAreaFilled(false);
+        jButtonModificarR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarRActionPerformed(evt);
+            }
+        });
+
+        jButtonEliminarR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete-file-icon.png"))); // NOI18N
+        jButtonEliminarR.setContentAreaFilled(false);
+        jButtonEliminarR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEliminarRActionPerformed(evt);
             }
         });
 
@@ -257,56 +334,65 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel12))
+                        .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jSpinnerMesR, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldPorcentaje))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jSpinnerDiaR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jSpinnerAnoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel11)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextFieldCalificacion)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jSpinnerHoraR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel14)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jTextFieldIdR)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinnerMinutosR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel13)
+                        .addComponent(jSpinnerMesR, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextFieldCalificacionTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(198, 198, 198))
+                        .addComponent(jSpinnerDiaR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jSpinnerAnoR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinnerHoraR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinnerMinutosR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addGap(53, 53, 53)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextFieldCalificacionTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(jButtonBuscarR)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonModificarR)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonEliminarR))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextFieldIdR, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel10)
+                                .addGap(45, 45, 45)
+                                .addComponent(jTextFieldPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldCalificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(jTextFieldIdR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(jTextFieldPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(jTextFieldCalificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -317,26 +403,29 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
                     .addComponent(jSpinnerHoraR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
                     .addComponent(jSpinnerMinutosR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jTextFieldPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(jTextFieldCalificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14)
-                    .addComponent(jTextFieldIdR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
-                    .addComponent(jTextFieldCalificacionTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addComponent(jButton1)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel13)
+                        .addComponent(jTextFieldCalificacionTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButtonModificarR)
+                        .addComponent(jButtonBuscarR)
+                        .addComponent(jButtonEliminarR)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Actions-document-save-icon.png"))); // NOI18N
+        jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -346,12 +435,18 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(23, 23, 23))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(214, 214, 214)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         pack();
@@ -369,9 +464,9 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
             if(jTextFieldIdR.getText().isEmpty()){
                 avance.setId(BigDecimal.valueOf(Long.parseLong(jTextFieldId.getText())));
                 avance.setPropuestasId((Propuestas)jComboBoxPropuesta.getSelectedItem());
-                String string = jSpinnerMes.getName()+" "+jSpinnerDia.getName()+" "+jSpinnerAno.getName();
+                String string =jSpinnerDia.getName()+"/"+jSpinnerMes.getName()+"/"+jSpinnerAno.getName();
                 try {
-                    Date date = new SimpleDateFormat("MM dd yyyy").parse(string);
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(string);
                     avance.setFechaRecepcion(date);
                 } catch (ParseException ex) {
                     Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -394,9 +489,9 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
                 
             }else if(jTextAreaDescripcion.getText().isEmpty()){
                 revision.setId(BigDecimal.valueOf(Long.parseLong(jTextFieldIdR.getText())));
-                String string = jSpinnerMesR.getName()+" "+jSpinnerDiaR.getName()+" "+jSpinnerAnoR.getName();
+                String string =jSpinnerDiaR.getName()+"/"+jSpinnerMesR.getName()+"/"+jSpinnerAnoR.getName();
                 try {
-                    Date date = new SimpleDateFormat("MM dd yyyy").parse(string);
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(string);
                     revision.setFechaRevision(date);
                 } catch (ParseException ex) {
                     Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -422,9 +517,9 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
             }else{
                 avance.setId(BigDecimal.valueOf(Long.parseLong(jTextFieldId.getText())));
                 avance.setPropuestasId((Propuestas)jComboBoxPropuesta.getSelectedItem());
-                String string = jSpinnerMes.getName()+" "+jSpinnerDia.getName()+" "+jSpinnerAno.getName();
+                String string =jSpinnerDia.getName()+"/"+jSpinnerMes.getName()+"/"+jSpinnerAno.getName();
                 try {
-                    Date date = new SimpleDateFormat("MM dd yyyy").parse(string);
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(string);
                     avance.setFechaRecepcion(date);
                 } catch (ParseException ex) {
                     Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -443,9 +538,9 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
                     Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 revision.setId(BigDecimal.valueOf(Long.parseLong(jTextFieldIdR.getText())));
-                String string1 = jSpinnerMesR.getName()+" "+jSpinnerDiaR.getName()+" "+jSpinnerAnoR.getName();
+               String string1 =jSpinnerDiaR.getName()+"/"+jSpinnerMesR.getName()+"/"+jSpinnerAnoR.getName();
                 try {
-                    Date date = new SimpleDateFormat("MM dd yyyy").parse(string1);
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(string1);
                     revision.setFechaRevision(date);
                 } catch (ParseException ex) {
                     Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -483,9 +578,104 @@ public class AvancesJInternalFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldIdRActionPerformed
 
+    private void jButtonBuscarAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarAActionPerformed
+            avance = avances.findAvances(BigDecimal.valueOf(Long.parseLong(jTextFieldId.getText())));
+            jTextAreaDescripcion.setText(avance.getDescripcion());
+            jComboBoxPropuesta.setSelectedItem(avance.getPropuestasId());
+            // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonBuscarAActionPerformed
+
+    private void jButtonModificarAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarAActionPerformed
+            avance.setId(BigDecimal.valueOf(Long.parseLong(jTextFieldId.getText())));
+                avance.setPropuestasId((Propuestas)jComboBoxPropuesta.getSelectedItem());
+                String string =jSpinnerDia.getName()+"/"+jSpinnerMes.getName()+"/"+jSpinnerAno.getName();
+                try {
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(string);
+                    avance.setFechaRecepcion(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                String hora = jSpinnerHora.getName()+" "+jSpinnerMinutos.getName();
+                try {
+                    Date horas = new SimpleDateFormat("HH mm").parse(hora);
+                    avance.setHoraRecepcion(horas);
+                } catch (ParseException ex) {
+                    Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                avance.setDescripcion(jTextAreaDescripcion.getText());
+            try {
+                avances.edit(avance);// TODO add your handling code here:
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_jButtonModificarAActionPerformed
+
+    private void jButtonEliminarAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarAActionPerformed
+            
+            try {
+                avances.destroy(BigDecimal.valueOf(Long.parseLong(jTextFieldId.getText())));
+           
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NonexistentEntityException ex) {
+                Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_jButtonEliminarAActionPerformed
+
+    private void jButtonBuscarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarRActionPerformed
+            revision = revisiones.findRevisionesAvance(BigDecimal.valueOf(Long.parseLong(jTextFieldIdR.getText())));
+            jTextAreaResumen.setText(revision.getResumenObservacion());
+            jTextFieldCalificacion.setText(""+revision.getCalificacionAvance());
+            jTextFieldPorcentaje.setText(""+revision.getPorcentajeAvance());// TODO add your handling code here:
+    }//GEN-LAST:event_jButtonBuscarRActionPerformed
+
+    private void jButtonModificarA1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarA1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonModificarA1ActionPerformed
+
+    private void jButtonModificarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarRActionPerformed
+                revision.setId(BigDecimal.valueOf(Long.parseLong(jTextFieldIdR.getText())));
+                String string =jSpinnerDiaR.getName()+"/"+jSpinnerMesR.getName()+"/"+jSpinnerAnoR.getName();
+                try {
+                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(string);
+                    revision.setFechaRevision(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                String hora = jSpinnerHoraR.getName()+" "+jSpinnerMinutosR.getName();
+                try {
+                    Date horas = new SimpleDateFormat("HH mm").parse(hora);
+                    revision.setHoraRevision(horas);
+                } catch (ParseException ex) {
+                    Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                revision.setAvancesId(avances.findAvances(BigDecimal.valueOf(Long.parseLong(jTextFieldId.getText()))));
+                revision.setResumenObservacion(jTextAreaResumen.getText());
+                revision.setPorcentajeAvance(BigDecimal.valueOf(Long.parseLong(jTextFieldPorcentaje.getText())));
+                revision.setCalificacionAvance(BigDecimal.valueOf(Double.parseDouble(jTextFieldCalificacion.getText())));
+            try {
+                revisiones.edit(revision);// TODO add your handling code here:
+            } catch (Exception ex) {
+                Logger.getLogger(AvancesJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_jButtonModificarRActionPerformed
+
+    private void jButtonEliminarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarRActionPerformed
+                   // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonEliminarRActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonBuscarA;
+    private javax.swing.JButton jButtonBuscarR;
+    private javax.swing.JButton jButtonEliminarA;
+    private javax.swing.JButton jButtonEliminarR;
+    private javax.swing.JButton jButtonModificarA;
+    private javax.swing.JButton jButtonModificarA1;
+    private javax.swing.JButton jButtonModificarR;
     private javax.swing.JComboBox jComboBoxPropuesta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

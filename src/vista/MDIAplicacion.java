@@ -13,9 +13,11 @@ import javax.swing.JOptionPane;
 import vista.jinternals.FormularioProyectoJInternalFrame;
 import vista.jinternals.FormularioEntregaJInternalFrame;
 import vista.jinternals.AsignarDirectorJInternalFrame;
+import vista.jinternals.AvancesJInternalFrame;
 import vista.jinternals.ConsultarProyectosJInternalFrame;
 import vista.jinternals.ReportesJInternalFrame;
 import vista.jinternals.FormularioDirectoresJInternalFrame;
+import vista.jinternals.RegistrarPropuestaJInternalFrame;
 
 /**
  *
@@ -47,8 +49,8 @@ public class MDIAplicacion extends javax.swing.JFrame {
         jMenuIdeas = new javax.swing.JMenu();
         jMItemAdministrarIdeas = new javax.swing.JMenuItem();
         jMenuPropuestas = new javax.swing.JMenu();
-        jMItemRevisionPropuesta = new javax.swing.JMenuItem();
-        jMItemAdministrarPropuestas = new javax.swing.JMenuItem();
+        jMItemRegistrarPropuesta = new javax.swing.JMenuItem();
+        jMItemAvancesPropuestas = new javax.swing.JMenuItem();
         jMenuAnteproyectos = new javax.swing.JMenu();
         jMItemRevisarAntep = new javax.swing.JMenuItem();
         jMItemAdministrarAntep = new javax.swing.JMenuItem();
@@ -92,21 +94,21 @@ public class MDIAplicacion extends javax.swing.JFrame {
 
         jMenuPropuestas.setText("Propuestas");
 
-        jMItemRevisionPropuesta.setText("Revisar");
-        jMItemRevisionPropuesta.addActionListener(new java.awt.event.ActionListener() {
+        jMItemRegistrarPropuesta.setText("Registrar");
+        jMItemRegistrarPropuesta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMItemRevisionPropuestaActionPerformed(evt);
+                jMItemRegistrarPropuestaActionPerformed(evt);
             }
         });
-        jMenuPropuestas.add(jMItemRevisionPropuesta);
+        jMenuPropuestas.add(jMItemRegistrarPropuesta);
 
-        jMItemAdministrarPropuestas.setText("Administrar");
-        jMItemAdministrarPropuestas.addActionListener(new java.awt.event.ActionListener() {
+        jMItemAvancesPropuestas.setText("Avances y Revisiones");
+        jMItemAvancesPropuestas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMItemAdministrarPropuestasActionPerformed(evt);
+                jMItemAvancesPropuestasActionPerformed(evt);
             }
         });
-        jMenuPropuestas.add(jMItemAdministrarPropuestas);
+        jMenuPropuestas.add(jMItemAvancesPropuestas);
 
         menuBar.add(jMenuPropuestas);
 
@@ -236,13 +238,17 @@ public class MDIAplicacion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMItemAdministrarIdeasActionPerformed
 
-    private void jMItemRevisionPropuestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemRevisionPropuestaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMItemRevisionPropuestaActionPerformed
+    private void jMItemRegistrarPropuestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemRegistrarPropuestaActionPerformed
+        RegistrarPropuestaJInternalFrame registrarPropuestaJI = new RegistrarPropuestaJInternalFrame();
+        desktopPane.add(registrarPropuestaJI);
+        registrarPropuestaJI.setVisible(true);// TODO add your handling code here:
+    }//GEN-LAST:event_jMItemRegistrarPropuestaActionPerformed
 
-    private void jMItemAdministrarPropuestasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemAdministrarPropuestasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMItemAdministrarPropuestasActionPerformed
+    private void jMItemAvancesPropuestasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemAvancesPropuestasActionPerformed
+        AvancesJInternalFrame avancesJI = new AvancesJInternalFrame();
+        desktopPane.add(avancesJI);
+        avancesJI.setVisible(true);// TODO add your handling code here:
+    }//GEN-LAST:event_jMItemAvancesPropuestasActionPerformed
 
     private void jMItemRevisarAntepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemRevisarAntepActionPerformed
         // TODO add your handling code here:
@@ -313,14 +319,14 @@ public class MDIAplicacion extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMItemAdministrarAsesorias;
     private javax.swing.JMenuItem jMItemAdministrarDirectores;
     private javax.swing.JMenuItem jMItemAdministrarIdeas;
-    private javax.swing.JMenuItem jMItemAdministrarPropuestas;
     private javax.swing.JMenuItem jMItemAdministrarProyectos;
     private javax.swing.JMenuItem jMItemAdministrarSust;
+    private javax.swing.JMenuItem jMItemAvancesPropuestas;
     private javax.swing.JMenuItem jMItemEjecutarSust;
     private javax.swing.JMenuItem jMItemRegistrarEntrega;
+    private javax.swing.JMenuItem jMItemRegistrarPropuesta;
     private javax.swing.JMenuItem jMItemReservarEspacioSust;
     private javax.swing.JMenuItem jMItemRevisarAntep;
-    private javax.swing.JMenuItem jMItemRevisionPropuesta;
     private javax.swing.JMenu jMenuAnteproyectos;
     private javax.swing.JMenu jMenuAsesorias;
     private javax.swing.JMenu jMenuDirectores;

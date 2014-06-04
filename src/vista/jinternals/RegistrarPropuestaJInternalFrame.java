@@ -9,6 +9,8 @@ package vista.jinternals;
 import controller.EstadosJpaController;
 import controller.IdeasJpaController;
 import controller.PropuestasJpaController;
+import controller.exceptions.IllegalOrphanException;
+import controller.exceptions.NonexistentEntityException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +29,7 @@ public class RegistrarPropuestaJInternalFrame extends javax.swing.JInternalFrame
     Ideas idea = new Ideas();
     IdeasJpaController ideas = new IdeasJpaController(null);//invoco el controlador de ideas para importar sus datos
     Estados estado = new Estados();
-    EstadosJpaController estados = new EstadosJpaController(null);//voco el controlador de estados para importar sus datos
+    EstadosJpaController estados = new EstadosJpaController();//voco el controlador de estados para importar sus datos
     Propuestas propuestas = new Propuestas();
     PropuestasJpaController propuestasjpa = new PropuestasJpaController(null);
     /**
@@ -74,6 +76,9 @@ public class RegistrarPropuestaJInternalFrame extends javax.swing.JInternalFrame
         jPanel3 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
+        jButtonBuscar = new javax.swing.JButton();
+        jButtonModificar = new javax.swing.JButton();
+        jButtonEliminar = new javax.swing.JButton();
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(452, 100));
 
@@ -261,7 +266,8 @@ public class RegistrarPropuestaJInternalFrame extends javax.swing.JInternalFrame
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButtonRegistrar.setText("Registrar");
+        jButtonRegistrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Actions-document-save-icon.png"))); // NOI18N
+        jButtonRegistrar.setContentAreaFilled(false);
         jButtonRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRegistrarActionPerformed(evt);
@@ -312,22 +318,50 @@ public class RegistrarPropuestaJInternalFrame extends javax.swing.JInternalFrame
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
+        jButtonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search-file-icon.png"))); // NOI18N
+        jButtonBuscar.setContentAreaFilled(false);
+        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarActionPerformed(evt);
+            }
+        });
+
+        jButtonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit-file-icon.png"))); // NOI18N
+        jButtonModificar.setContentAreaFilled(false);
+        jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonModificarActionPerformed(evt);
+            }
+        });
+
+        jButtonEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete-file-icon.png"))); // NOI18N
+        jButtonEliminar.setContentAreaFilled(false);
+        jButtonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonRegistrar)
-                        .addGap(217, 217, 217))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addComponent(jButtonRegistrar)
+                .addGap(44, 44, 44)
+                .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
+                .addComponent(jButtonModificar)
+                .addGap(29, 29, 29)
+                .addComponent(jButtonEliminar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,9 +370,13 @@ public class RegistrarPropuestaJInternalFrame extends javax.swing.JInternalFrame
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                .addComponent(jButtonRegistrar)
-                .addGap(22, 22, 22))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonRegistrar)
+                    .addComponent(jButtonModificar)
+                    .addComponent(jButtonEliminar)
+                    .addComponent(jButtonBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel1.getAccessibleContext().setAccessibleDescription("");
@@ -363,6 +401,7 @@ public class RegistrarPropuestaJInternalFrame extends javax.swing.JInternalFrame
                 propuestas.setId(BigDecimal.valueOf(Double.parseDouble(jTextFieldId.getText())));
                 propuestas.setGrupo(jTextFieldGrupo.getText());
                 propuestas.setEstadosId((Estados)jComboBoxEstados.getSelectedItem());
+                
         try {
             propuestasjpa.create(propuestas);
         } catch (Exception ex) {
@@ -379,8 +418,49 @@ public class RegistrarPropuestaJInternalFrame extends javax.swing.JInternalFrame
                 }
     }//GEN-LAST:event_jComboBoxEstadosActionPerformed
 
+    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+           propuestas = propuestasjpa.findPropuestas(BigDecimal.valueOf(Double.parseDouble(jTextFieldId.getText())));
+           jTextFieldTitulo.setText(propuestas.getTitulo());
+           jTextFieldNotaDefinitiva.setText(""+propuestas.getNotaDefinitiva());
+           jTextFieldGrupo.setText(propuestas.getGrupo());
+           jComboBoxIdea.setSelectedItem(propuestas.getIdeasId());
+           jComboBoxEstados.setSelectedItem(propuestas.getEstadosId());
+           // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonBuscarActionPerformed
+
+    private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
+            propuestas.setTitulo(jTextFieldTitulo.getText());
+                propuestas.setPeriodo(jYearChooser1.toString()+jComboBoxPeriodo.toString());
+                propuestas.setIdeasId((Ideas)jComboBoxIdea.getSelectedItem());
+                propuestas.setNotaDefinitiva(BigDecimal.valueOf(Double.parseDouble(jTextFieldNotaDefinitiva.getText())));
+                propuestas.setId(BigDecimal.valueOf(Double.parseDouble(jTextFieldId.getText())));
+                propuestas.setGrupo(jTextFieldGrupo.getText());
+                propuestas.setEstadosId((Estados)jComboBoxEstados.getSelectedItem());
+                
+        try {
+            propuestasjpa.edit(propuestas);// TODO add your handling code here:
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(RegistrarPropuestaJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(RegistrarPropuestaJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonModificarActionPerformed
+
+    private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
+        try {
+            propuestasjpa.destroy(BigDecimal.valueOf(Double.parseDouble(jTextFieldId.getText())));// TODO add your handling code here:
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(RegistrarPropuestaJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(RegistrarPropuestaJInternalFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBuscar;
+    private javax.swing.JButton jButtonEliminar;
+    private javax.swing.JButton jButtonModificar;
     private javax.swing.JButton jButtonRegistrar;
     private javax.swing.JComboBox jComboBoxEstados;
     private javax.swing.JComboBox jComboBoxIdea;
