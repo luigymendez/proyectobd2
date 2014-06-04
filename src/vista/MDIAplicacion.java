@@ -223,13 +223,17 @@ public class MDIAplicacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMItemRegistrarEntregaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemRegistrarEntregaActionPerformed
+<<<<<<< HEAD
+        FormularioEntregaJInternalFrame formularioEntregaJInternal = new FormularioEntregaJInternalFrame();
+=======
         //formularioEntregaJInternal = new FormularioEntregaJInternalFrame(null);
+>>>>>>> e2f7a2d038bd913fedd28795c9f2a36d73dd7222
         desktopPane.add(formularioEntregaJInternal);
-        formularioEntregaJInternal.show();
+        formularioEntregaJInternal.setVisible(true);
     }//GEN-LAST:event_jMItemRegistrarEntregaActionPerformed
 
     private void jMItemAdministrarProyectosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMItemAdministrarProyectosActionPerformed
-        ConsultarProyectosJInternalFrame consultarProyectosJInternalFrame= new ConsultarProyectosJInternalFrame();
+        ConsultarProyectosJInternalFrame consultarProyectosJInternalFrame = new ConsultarProyectosJInternalFrame();
         desktopPane.add(consultarProyectosJInternalFrame);
         consultarProyectosJInternalFrame.setVisible(true);
     }//GEN-LAST:event_jMItemAdministrarProyectosActionPerformed
